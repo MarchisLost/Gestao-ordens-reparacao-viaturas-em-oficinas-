@@ -91,7 +91,7 @@ class PinLogin {
 //construct new class of the pin pad
 new PinLogin({
   el: document.getElementById('mainPinLogin'),
-  loginEndpoint: 'app.js',
+  loginEndpoint: 'src/app.js',
   redirectTo: '../workview',
-  maxNumber: 6
+  maxNumbers: 6
 });
