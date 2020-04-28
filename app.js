@@ -8,7 +8,11 @@ const publicDirectoryPath = path.join(__dirname, '/public')
 app.use(express.static(publicDirectoryPath))
 
 app.get('/mecanicLogin', (req, res) => {
-  res.sendFile(path.join(__dirname, '../Gestao-ordens-reparacao-viaturas-em-oficinas-/public', '/mecLogin.html'))
+  res.sendFile(path.join(__dirname, '../Gestao-ordens-reparacao-viaturas-em-oficinas-/public', '/html/mecLogin.html'))
+})
+
+app.get('/workview', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Gestao-ordens-reparacao-viaturas-em-oficinas-/public', '/html/workview.html'))
 })
  
 app.listen(port, () => {
