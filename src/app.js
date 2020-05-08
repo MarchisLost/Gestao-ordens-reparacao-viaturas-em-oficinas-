@@ -15,8 +15,8 @@ app.get('/workview', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/workview.html'))
 })
 
-app.get('/testingGrounds', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/tGrounds.html'))
+app.get('/rececionista', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', '/html/rececionista.html'))
 })
  
 app.listen(port, () => {

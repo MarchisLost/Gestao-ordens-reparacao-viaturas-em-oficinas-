@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+  <!--===============================================================================================-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!--===============================================================================================-->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <!--===============================================================================================-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-light bg-light">
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Procurar Veículo" aria-label="Procurar Veículo">
+        <button class="btn btn-secondary" type="button">
+          <i class="fa fa-search"></i>
+        </button>
+      </form>
+      <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Logout</button>
+    </nav>
+  
+    <br>
+
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <p class="text-center">Lista de veículos</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col">
+            <div class="card card-body">
+
+              <p>Veículo 1
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Consultar estado</button>
+              </p>
+
+              <div class="collapse multi-collapse" id="multiCollapseExample2">
+                <div class="card card-body">
+                  <div>
+                    <p style="font-style: italic;">Estado: Em reparação (Última atualização: 10s atrás)</p>
+                  </div>
+                  <div>
+                    <p>Nao sei</p>
+                    <p>O que colocar mais</p>
+                  </div>
+                </div>
+                <br>
+              </div>
+
+              <p>Veículo 2
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Consultar estado</button>
+              </p>
+            </div>
+            <br>
+            <button class="btn btn-dark"><i class="fa fa-plus"> Adicionar Veiculo</i></button>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>
