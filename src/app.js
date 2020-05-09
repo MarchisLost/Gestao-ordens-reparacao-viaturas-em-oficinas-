@@ -1,11 +1,17 @@
 const path = require('path')
 const express = require('express')
+const db = require('./db/db')
 
 const app = express()
 const port = process.env.PORT || 3000
 const publicDirectoryPath = path.join(__dirname, '../public')
 
 app.use(express.static(publicDirectoryPath))
+
+//testDB
+db.authenticate()
+  .then(() => console.log('DB Working'))
+  .catch((err) => console.log('Error: ', err))
 
 app.get('/mecanicLogin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
