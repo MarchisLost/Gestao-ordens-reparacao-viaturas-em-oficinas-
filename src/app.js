@@ -20,6 +20,10 @@ app.get('/mecanicLogin', (req, res) => {
 app.get('/workview', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/workview.html'))
 })
+
+app.get('/rececionista', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', '/html/rececionista.html'))
+})
  
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`)
