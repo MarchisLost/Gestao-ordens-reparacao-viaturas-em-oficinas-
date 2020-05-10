@@ -32,7 +32,15 @@ app.get('/responsavel', (req, res) => {
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/admin.html'))
 })
- 
+
+app.get('/cliente', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', '/html/cliente.html'))
+})
+
+app.get('/vistaGeral', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', '/html/vistaGeral.html'))
+})
+
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`)
 })
