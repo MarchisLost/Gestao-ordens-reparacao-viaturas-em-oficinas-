@@ -68,22 +68,32 @@ class PinLogin {
   }
 
   //what happens when "done" is pressed, change here for working with bd
+  //TODO: change it so it passes the value to /loginAtempt
   _attemptLogin() {
-      if (this.value.length > 0) {
-          fetch(this.loginEndpoint, {
-              method: "post",
-              headers: {
-                  "Content-Type": "application/x-www-form-urlencoded"
-              },
-              body: `pincode=${this.value}`
-          }).then(response => {
-              if (response/* .status === 200 */) {
-                  window.location.href = this.redirectTo;
-              } else {
-                  this.el.textDisplay.classList.add("pin-login__text--error");
-              }
-          })
-      }
+    if (this.value.length > 0) {
+        /* fetch(this.loginEndpoint, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `pincode=${this.value}` //Send the pin numbers              
+        }).then(response => {
+            console.log('Pin: ', this.value); //pin numbers
+            if (response.status === 200) {
+                window.location.href = this.redirectTo;
+            } else {
+                this.el.textDisplay.classList.add("pin-login__text--error");
+            }
+        }).catch(err => console.log('Error: ', err)) */
+
+        //Maybe like this
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", this.loginEndpoint, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            value: this.value
+        }));
+    }
   }
 }
 
@@ -91,7 +101,7 @@ class PinLogin {
 //construct new class of the pin pad
 new PinLogin({
   el: document.getElementById('mainPinLogin'),
-  loginEndpoint: 'src/app.js',
+  loginEndpoint: '/loginAtempt',
   redirectTo: '../workview',
-  maxNumbers: 6
+  maxNumbers: 8
 });
