@@ -45,9 +45,12 @@ app.get('/vistaGeral', (req, res) => {
 })
 
 
-//Login attempt
+//Login attempt 
 app.post('/loginAtempt', (req, res) => {
-  res.send('here')
+  let username = req.body.email
+  let pass = req.body.pass
+  
+  res.send(req.body)
 })
 
 

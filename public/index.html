@@ -31,12 +31,11 @@
 		<div class="limiter">
 			<div class="container-login100">
 				<div class="wrap-login100">
-					<form class="login100-form validate-form">
+					<form class="login100-form validate-form" action="/loginAtempt" method="POST">
 						<span class="login100-form-title p-b-26">
 							WorkShop Manager
 						</span>
 
-						<form action="/loginAtempt" method="post">
 							<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
 								<input class="input100" type="text" name="email">
 								<span class="focus-input100" data-placeholder="Email"></span>
@@ -53,12 +52,11 @@
 							<div class="container-login100-form-btn">
 								<div class="wrap-login100-form-btn">
 									<div class="login100-form-bgbtn"></div>
-									<button class="login100-form-btn">
+									<button class="login100-form-btn" type="submit">
 										Login
 									</button>
 								</div>
 							</div>
-						</form>
 
 						<div class="text-center p-t-115">
 							<a type="button" class="btn btn-secondary" href="html/mecLogin.html">Entrar com PIN?</a>
