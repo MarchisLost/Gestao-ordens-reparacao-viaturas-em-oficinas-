@@ -1,4 +1,4 @@
-var pg = require('pg');
+/* var pg = require('pg');
 //or native libpq bindings
 //var pg = require('pg').native
 
@@ -16,4 +16,4 @@ client.connect(function(err) {
     // >> output: 2018-08-23T14:02:57.117Z
     client.end();
   });
-});
+}); */
