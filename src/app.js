@@ -2,8 +2,8 @@ const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
 const db = require('./db/db')
-const {getLogin} = require('./db/user')
-const roleRouter = require('./routers/routes')
+const {getLogin} = require('./db/login')
+const roleRouter = require('./routers/roleRoutes')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -15,7 +15,8 @@ app.use(bodyParser.urlencoded({extended: false}))
 //Routes  
 app.use(roleRouter)
 
-//Login attempt 
+//Login attempt, receives values from form, sends it to see if it exists in database so then it redirects to the propor role view
+//TODO autorization & authentication
 app.post('/loginAtempt', async (req, res) => {
   let username = req.body.email
   let pass = req.body.pass
