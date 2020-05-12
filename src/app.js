@@ -3,6 +3,7 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const db = require('./db/db')
 const {getLogin} = require('./db/user')
+const loginRouter = require('./routers/routes')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -12,7 +13,9 @@ app.use(express.static(publicDirectoryPath))
 app.use(bodyParser.urlencoded({extended: false}))
 
 //Routes  
-app.get('/mecanicLogin', (req, res) => {
+app.use(loginRouter)
+
+/* app.get('/mecanicLogin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
 })
 
@@ -38,7 +41,7 @@ app.get('/cliente', (req, res) => {
 
 app.get('/vistaGeral', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/vistaGeral.html'))
-})
+}) */
 
 
 //Login attempt 
