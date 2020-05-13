@@ -4,6 +4,8 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt')
+const saltRounds = 10 //number of salt rounds, best one in terms of security&speed
 
 //File requires
 require('dotenv').config();
@@ -61,21 +63,27 @@ app.post('/loginAtempt', async (req, res) => {
     failureRedirect: '/index',
     failureFlash: true })
 
-  const data = await getLogin(username, pass)
+  const data = await getLogin(username)
   console.log(data);
 
   //Receives worker data, checks his role and sends the right view
   if (data === null) {
-    res.status(404).send('nao existe nome')
+    res.status(404).json('null')
   } else {
-    if (data.cargo === 'mecanico') {
-      res.sendFile(path.join(__dirname, '../public', '/html/workview.html'))
-    } else if (data.cargo === 'rececionista'){
-      res.sendFile(path.join(__dirname, '../public', '/html/rececionista.html'))
-    } else {
-      res.sendFile(path.join(__dirname, '../public', '/html/responsavel.html'))
-    }
-  }
+    bcrypt.compare(pass, data.password, (err, res2) => {
+      if (res2 === true) {
+        if (data.cargo === 'mecanico') {
+          res.sendFile(path.join(__dirname, '../public', '/html/workview.html'))
+        } else if (data.cargo === 'rececionista'){
+          res.sendFile(path.join(__dirname, '../public', '/html/rececionista.html'))
+        } else {
+          res.sendFile(path.join(__dirname, '../public', '/html/responsavel.html'))
+        }
+      } else {
+        res.status(404).sendFile(path.join(__dirname, '../public', '/index.html'))
+      }
+    })
+  } 
 })
 
 
