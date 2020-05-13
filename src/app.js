@@ -76,8 +76,10 @@ app.post('/loginAtempt', async (req, res) => {
           res.sendFile(path.join(__dirname, '../public', '/html/workview.html'))
         } else if (data.cargo === 'rececionista'){
           res.sendFile(path.join(__dirname, '../public', '/html/rececionista.html'))
-        } else {
+        } else if (data.cargo === 'responsavel'){
           res.sendFile(path.join(__dirname, '../public', '/html/responsavel.html'))
+        } else {
+          res.sendFile(path.join(__dirname, '../public', '/html/admin.html'))
         }
       } else {
         res.status(404).sendFile(path.join(__dirname, '../public', '/index.html'))
