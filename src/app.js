@@ -1,9 +1,6 @@
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
-/* const session = require('express-session')
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy; */
 
 //File requires
 require('dotenv').config();
@@ -22,19 +19,9 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 //TODO validation on the login form
 
-/* //Session stuff
-//app.set('trust proxy', 1) // trust first proxy //lets have this sitting here just in case something doesnt work and this solves it idk
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false
-}))
-
-app.use(passport.initialize())
-app.use(passport.session()) */
-
 //Routes  
 app.use(roleRouter)
+//TODO find a way to display that the username or password are wrong!!
 app.use(loginRouter)
 
 app.listen(port, () => {

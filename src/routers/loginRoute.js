@@ -2,10 +2,8 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const path = require('path')
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy;
 
-const {getLogin} = require('../db/login')
+const {getLogin} = require('../db/templates')
 
 //Login attempt, receives values from form, sends it to see if it exists in database so then it redirects to the propor role view
 router.post('/loginAtempt', async (req, res) => {
@@ -32,7 +30,7 @@ router.post('/loginAtempt', async (req, res) => {
           res.sendFile(path.join(__dirname, '../../public', '/html/admin.html'))
         }
       } else {
-        res.status(404).sendFile(path.join(__dirname, '../public', '/index.html'))
+        res.status(404).sendFile(path.join(__dirname, '../../public', '/index.html'))
       }
     })
   } 
