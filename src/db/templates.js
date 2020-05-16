@@ -18,7 +18,17 @@ const getVeiculo = async (matricula) => {
     return data.rows[0] ? data.rows[0] : null
 }
 
+//Get vehicles for x worker using id
+const getVeiculoFuncionario = async (id) => {
+  let data = await db.query(
+    'SELECT * FROM veiculo WHERE id_funcionario=$1', [id])
+    .catch(e => console.error(e.stack))
+
+    return data.rows ? data.rows : null
+}
+
 module.exports = {
   getLogin,
-  getVeiculo
+  getVeiculo,
+  getVeiculoFuncionario
 }

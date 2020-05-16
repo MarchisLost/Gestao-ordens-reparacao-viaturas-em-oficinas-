@@ -9,7 +9,7 @@ const db = require('./db/db')
 const roleRoute = require('./routers/roleRoute')
 const loginRoute = require('./routers/loginRoute')
 const fileRoute = require('./routers/fileRoute')
-const {getLogin, getVeiculo} = require('./db/templates')
+const {getLogin, getVeiculo, getVeiculoFuncionario} = require('./db/templates')
 
 const saltRounds = 10 //number of salt rounds, best one in terms of security&speed
 
@@ -30,12 +30,20 @@ app.use(fileRoute)
 //TODO find a way to display that the username or password are wrong!!
 app.use(loginRoute)
 
-//test for the function on db/templates to get the vehicle
+//test for the function on db/templates to get all the vehicle by plate
 app.get('/veiculo/:id', async (req, res) => {
   const data = await getVeiculo(req.params.id)
   console.log("data", data)
   res.json({"data": data})
 })
+
+//test for the function on db/templates to get the vehicle from x worker
+app.get('/asd/:id', async (req, res) => {
+  const data = await getVeiculoFuncionario(req.params.id)
+  console.log("data", data)
+  res.json(data)
+})
+
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`)
 })
