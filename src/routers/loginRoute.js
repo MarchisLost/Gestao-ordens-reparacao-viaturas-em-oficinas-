@@ -16,12 +16,13 @@ router.post('/loginAtempt', async (req, res) => {
 
   //Receives worker data, checks his role and sends the right view
   if (data === null) {
-    res.status(404).json('null')
+    res.status(404).sendFile(path.join(__dirname, '../../public', '/index.html'))
   } else {
     bcrypt.compare(pass, data.password, (err, res2) => {
       if (res2 === true) {
         if (data.cargo === 'mecanico') {
           res.sendFile(path.join(__dirname, '../../public', '/html/workview.html'))
+          /* res.render('/workview') */ //WHY DOESNT THIS FUCKING THING WORKS
         } else if (data.cargo === 'rececionista'){
           res.sendFile(path.join(__dirname, '../../public', '/html/rececionista.html'))
         } else if (data.cargo === 'responsavel'){
@@ -34,6 +35,11 @@ router.post('/loginAtempt', async (req, res) => {
       }
     })
   } 
+})
+
+//logout
+router.post('/logout', (req, res) => {
+  res.redirect('/')
 })
 
 module.exports = router
