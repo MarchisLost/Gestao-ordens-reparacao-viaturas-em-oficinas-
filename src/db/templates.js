@@ -27,8 +27,28 @@ const getVeiculoFuncionario = async (id) => {
     return data.rows ? data.rows : null
 }
 
+//Get client by his id
+const getClient = async (id) => {
+  let data = await db.query(
+    'SELECT * FROM cliente WHERE id_cliente=$1', [id])
+    .catch(e => console.error(e.stack))
+
+    return data.rows ? data.rows : null
+}
+
+//Get orçamento by client id
+const getOrcamento = async (id) => {
+  let data = await db.query(
+    'SELECT * FROM orcamento WHERE id_cliente=$1', [id])
+    .catch(e => console.error(e.stack))
+
+    return data.rows ? data.rows : null
+}
+
 module.exports = {
   getLogin,
   getVeiculo,
-  getVeiculoFuncionario
+  getVeiculoFuncionario,
+  getClient,
+  getOrcamento
 }

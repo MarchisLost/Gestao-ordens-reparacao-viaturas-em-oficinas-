@@ -9,7 +9,7 @@ const db = require('./db/db')
 const roleRoute = require('./routers/roleRoute')
 const loginRoute = require('./routers/loginRoute')
 const fileRoute = require('./routers/fileRoute')
-const {getLogin, getVeiculo, getVeiculoFuncionario} = require('./db/templates')
+const {getVeiculo, getVeiculoFuncionario, getClient, getOrcamento} = require('./db/templates')
 
 const saltRounds = 10 //number of salt rounds, best one in terms of security&speed
 
@@ -40,6 +40,20 @@ app.get('/veiculo/:id', async (req, res) => {
 //test for the function on db/templates to get the vehicle from x worker
 app.get('/asd/:id', async (req, res) => {
   const data = await getVeiculoFuncionario(req.params.id)
+  console.log("data", data)
+  res.json(data)
+})
+
+//test for the function on db/templates to get the client by his id
+app.get('/client/:id', async (req, res) => {
+  const data = await getClient(req.params.id)
+  console.log("data", data)
+  res.json(data)
+})
+
+//test for the function on db/templates to get the orçamento by the client id
+app.get('/orc/:id', async (req, res) => {
+  const data = await getOrcamento(req.params.id)
   console.log("data", data)
   res.json(data)
 })
