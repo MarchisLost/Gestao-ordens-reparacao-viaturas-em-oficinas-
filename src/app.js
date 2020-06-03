@@ -16,8 +16,8 @@ const saltRounds = 10 //number of salt rounds, best one in terms of security&spe
 const app = express()
 const port = process.env.PORT || 3000
 const publicDirectoryPath = path.join(__dirname, '../public')
+app.set('html', path.join(__dirname, '../public/html'))
 app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, '../public/html'))
 
 app.use(express.static(publicDirectoryPath))
 app.use(bodyParser.urlencoded({extended: false})) 
