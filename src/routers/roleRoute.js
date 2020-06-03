@@ -1,7 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 
-const {getWorkviewInfo, getTarefas} = require('../db/templates')
+const {getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, getLinks, getProblemas, getListaTarefas} = require('../db/templates')
 
 router.get('/mecanicLogin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
@@ -23,15 +23,58 @@ router.get('/admin', (req, res) => {
   res.render('admin')
 })
 
-router.get('/cliente', (req, res) => {
-  res.render('cliente')
+// Cliente
+router.get('/cliente/:codigo', async(req, res) => {
+  const codigos = await getLinks()    // Links dos clientes
+  const orcamentos = await getdetalhesOrcamento()   //   Informacao dos orcamentos
+  const problemasRelatados = await getProblemas() // problemas dos clientes
+  const tarefasDescricao = await getListaTarefas()
+
+  //console.log(tarefasDescricao)
+
+  //console.log(problemasRelatados)
+
+  // Grab client who has the code in the URL
+  var clienteEspecifico = codigos.filter(function(some) {
+    return some.link === req.params.codigo;
+  });
+
+  // Grab specific client budget details
+  var detalhesOrcamento = orcamentos.filter(function(another) {
+    return another.id_cliente === clienteEspecifico[0].id_cliente;
+  });
+
+  // Grab specific problem from the client in question
+  var problemaEspecifico = problemasRelatados.filter(function(thing) {
+    return thing.cliente === clienteEspecifico[0].id_cliente;
+  });
+
+  // Grab tasks specific to client problem
+  var tarefaEspecifica = tarefasDescricao.filter(function(yikes) {
+    return yikes.cliente === clienteEspecifico[0].id_cliente;
+  });
+  
+  let arrayTarefa = []
+  for(i = 0; i<tarefaEspecifica.length; i++){
+    arrayTarefa.push(tarefaEspecifica[i].descricao)
+  }
+  
+  // console.log(arrayTarefa)
+  
+  const nomeCliente = detalhesOrcamento[0].nome
+  const estadoVeiculo = detalhesOrcamento[0].estado
+  const descricaoOrcamento = detalhesOrcamento[0].descricao
+  const valorOrcamento = detalhesOrcamento[0].valor
+  const problemaOrcamento = problemaEspecifico[0].descricao
+
+  res.render('cliente', {nomeCliente, estadoVeiculo, descricaoOrcamento, valorOrcamento, problemaOrcamento, arrayTarefa})
 })
 
 //Dashboard
 router.get('/dashboard', async (req, res) => {
 
   const tudo = await getWorkviewInfo()   //   Informacao dos veiculos
-  const tarefas = await getTarefas()
+  const tarefas = await getTarefasCompletas()
   // console.log(tarefas, tudo)
   // console.log("Comprimento: ", tarefas.length)
   

@@ -32,19 +32,6 @@ app.use(loginRoute)
 //TODO find a way to display that the username or password are wrong!!
 
 
-// //Function to randomly generate client code, add this shit somewhere when needed --- maybe we can find a shorter way, but ehhh
-// function makeid(length) {
-//   var result           = '';
-//   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//   var charactersLength = characters.length;
-//   for ( var i = 0; i < length; i++ ) {
-//      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-//   }
-//   return result;
-// }
-// //console.log(`http://localhost:3000/client/${makeid(20)}`);
-
-
 // //test for the function on db/templates to get all the vehicle by plate
 // app.get('/veiculo/:id', async (req, res) => {
 //   const data = await getVeiculo(req.params.id)
