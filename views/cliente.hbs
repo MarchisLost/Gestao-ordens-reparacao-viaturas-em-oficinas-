@@ -21,7 +21,7 @@
       <p></p>
       <div class="card">
         <div class="card-body">
-          Nome do cliente
+          Nome do cliente: {{nomeCliente}}
         </div>
       </div>
     </nav>
@@ -40,37 +40,57 @@
       <div class="row">
         <div class="col-8">
             <div class="card card-body">
-             <p>wsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheof
-              wsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheof
-              wsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheof
-              wsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheof
-              wsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheof
-              wsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheof
-              wsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheof
-              wsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheof
-              wsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheofwsuifwghoiufhwoiefhewoifhewouisfhewiuofhoefheof
-             </p>
+             <p>{{descricaoOrcamento}}</p>
+             <p>Problemas relatados pelo cliente a chegada:</p>
+             <div id="problemasRelatados"></div>
+             <br>
+             <p>Tarefas necessarias para a reparacao:</p>
+             <div id="tarefasNecessarias"></div>
             </div>
             <br>
-            <div>            
+            <div>       
+              <h5>Previsao custo: {{valorOrcamento}}€</h5>   
+              <br>  
               <button type="button" class="btn btn-dark">Aprovar</button> 
             </div>       
         </div>
         <div class="col-4">
           <div class="card card-body">
-            <h3 style="font-style: italic;">Estado: Em reparação</h3>
-            <p class="font-weight-light">(Última atualização: 10s atrás)</p>
+            <h3 style="font-style: italic;">Estado: {{estado}}</h3>
           </div>
           <br>
           <div class="card card-body">
             <p class="font-weight-light">Caso tenha alguma questao, por favor contacte:</p>
-            <p> email: abc@abc.com</p>
+            <p> email: workshopManagerLDA@gmail.com</p>
             <p class="font-weight-light">ou</p>
-            <p>123456789</p>
+            <p>255-744-218</p>
           </div>
         </div>
       </div>
     </div>
+
+    <p id="problemasArray" hidden>{{problemaOrcamento}}</p>
+    <p id="tarefasNecessarios" hidden>{{arrayTarefa}}</p>
   </body>
 
+  <script>
+    let problemasString = document.getElementById("problemasArray").innerHTML
+    var divd = document.getElementById("problemasRelatados")
+    var arrayProblemas = problemasString.split(',')
+
+    let tarefasString = document.getElementById("tarefasNecessarios").innerHTML
+    var arrayTarefas = tarefasString.split(',')
+    var divd2 = document.getElementById("tarefasNecessarias")
+
+    for (i = 0; i< arrayProblemas.length; i++) {
+      divd.appendChild(document.createTextNode("-" + arrayProblemas[i]));
+      divd.appendChild(document.createElement("br"))
+    }
+
+    for (i = 0; i< arrayTarefas.length; i++) {
+      divd2.appendChild(document.createTextNode("-" + arrayTarefas[i]));
+      divd2.appendChild(document.createElement("br"))
+    }
+
+  </script>
 </html>

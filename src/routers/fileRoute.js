@@ -1,10 +1,5 @@
 const express = require('express')
-const router = express.Router()
-const path = require('path')
-
-//get the dashboard page somehow
-router.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/vistaGeral.html'))
-})
+const router = new express.Router()
+// const path = require('path')
 
 module.exports = router

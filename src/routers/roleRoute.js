@@ -1,32 +1,96 @@
 const express = require('express')
-const router = express.Router()
+const router = new express.Router()
+
+const {getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, getProblemas, getListaTarefas, getClientByLink, getVeiculoById, getNomeCliente} = require('../db/templates')
 
 router.get('/mecanicLogin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
 })
 
 router.get('/workview', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/workview.html'))
+  res.render('workview')
 })
 
 router.get('/rececionista', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/rececionista.html'))
+  res.render('rececionista')
 })
 
 router.get('/responsavel', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/responsavel.html'))
+  res.render('responsavel')
 })
 
 router.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/admin.html'))
+  res.render('admin')
 })
 
-router.get('/cliente', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/cliente.html'))
+// Cliente
+router.get('/cliente/:codigo', async(req, res) => {
+  const clienteEspecifico = await getClientByLink(req.params.codigo)  // ID e Link do cliente
+  const orcamentos = await getdetalhesOrcamento(clienteEspecifico[0].cliente)   //   Informacao do orcamento do cliente
+  const problemasRelatados = await getProblemas(clienteEspecifico[0].cliente) // problemas do cliente
+  const tarefasDescricao = await getListaTarefas(clienteEspecifico[0].cliente)  // tarefas do cliente
+  const estadoVeiculo = await getVeiculoById(clienteEspecifico[0].cliente)   // Estado do veiculo do cliente
+  const infoCliente = await getNomeCliente(clienteEspecifico[0].cliente)
+
+  let arrayTarefa = []
+  for(i = 0; i<tarefasDescricao.length; i++){
+    arrayTarefa.push(tarefasDescricao[i].descricao)
+  }
+  
+  const nomeCliente = infoCliente[0].nome
+  const descricaoOrcamento = orcamentos[0].descricao
+  const valorOrcamento = orcamentos[0].valor
+  const problemaOrcamento = problemasRelatados[0].descricao
+  const estado = estadoVeiculo[0].estado
+
+  res.render('cliente', {nomeCliente, estado, descricaoOrcamento, valorOrcamento, problemaOrcamento, arrayTarefa})
 })
 
-router.get('/vistaGeral', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/vistaGeral.html'))
+//Dashboard
+router.get('/dashboard', async (req, res) => {
+
+  const tudo = await getWorkviewInfo()   //   Informacao dos veiculos
+  const tarefas = await getTarefasCompletas()
+  // console.log(tarefas, tudo)
+  // console.log("Comprimento: ", tarefas.length)
+  
+
+  // console.log("Numero de tarefas para veiculo 1: ", tarefas.filter(tarefa => tarefa.id_veiculo === 1).length)
+
+  let numeroTarefasPorID = []
+
+  for (i = 0; i < tarefas.length; i++) {
+    numeroTarefasPorID.push(tarefas[i].id_veiculo)
+    //console.log(tarefas[i])
+  }
+
+  const idVeiculos = [...new Set(numeroTarefasPorID)]
+
+  let numeroTarefas = []
+  let tarefasCompletas = []
+
+  for (i = 0; i < idVeiculos.length; i++) {
+    numeroTarefas.push(tarefas.filter(tarefa => tarefa.id_veiculo === idVeiculos[i]).length)
+    tarefasCompletas.push(tarefas.filter(tarefa => tarefa.id_veiculo === idVeiculos[i] && tarefa.completa).length)
+  }
+
+  // console.log(numeroTarefas, tarefasCompletas)
+  
+  let progresso = []
+  for (i = 0; i < idVeiculos.length; i++) {
+    progresso.push(((100 * tarefasCompletas[i]) / numeroTarefas[i]).toFixed(0))
+  }
+
+  // Nome e matricula dos veiculos e mecanicos
+  let nomes = []
+  let matriculas = []
+
+  for(i = 0; i < tudo.length; i++) {
+    nomes.push(tudo[i].nome)
+    matriculas.push(tudo[i].matricula)
+  }
+
+  res.render('vistaGeral', {nomes, matriculas, numeroTarefas, tarefasCompletas, progresso})
 })
 
 module.exports = router
