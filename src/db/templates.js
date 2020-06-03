@@ -69,36 +69,55 @@ const getTarefasCompletas = async () => {
 // Cliente
 // ---------------------------------------------------------------------------------------------
 
-const getdetalhesOrcamento = async() => {
+const getClientByLink = async (link) => {
   let data = await db.query(
-    "select cliente.id_cliente, descricao, estado, nome, valor from orcamento, veiculo, cliente where orcamento.id_veiculo = veiculo.id_veiculo and orcamento.id_cliente = cliente.id_cliente"
+    "select entrada.cliente, entrada.link from entrada where entrada.link = $1", [link]
+  )
+  .catch(e => console.error(e.stack))
+
+  return data.rows ? data.rows : null
+}
+
+const getNomeCliente = async (id) => {
+  let data = await db.query(
+    "select nome from cliente where cliente.id_cliente = $1", [id]
+  )
+  .catch(e => console.error(e.stack))
+
+  return data.rows ? data.rows : null
+}
+
+const getdetalhesOrcamento = async(id) => {
+  let data = await db.query(
+    //"select cliente.id_cliente, descricao, estado, nome, valor from orcamento, veiculo, cliente where orcamento.id_veiculo = veiculo.id_veiculo and orcamento.id_cliente = $1", [id]
+    "select orcamento.id_cliente, orcamento.id_veiculo, valor,  descricao from orcamento where orcamento.id_cliente = $1", [id]
   )
   .catch(e => console.error(e.stack))
 
     return data.rows ? data.rows : null
 }
 
-const getLinks = async() => {
+const getProblemas = async (id) => {
   let data = await db.query(
-    "select id_cliente, link from cliente"
+    "select problema.descricao, entrada.cliente from problema, entrada where problema.id_entrada = entrada.id_entrada and entrada.cliente = $1", [id]
   )
   .catch(e => console.error(e.stack))
 
     return data.rows ? data.rows : null
 }
 
-const getProblemas = async () => {
+const getListaTarefas = async (id) => {
   let data = await db.query(
-    "select problema.descricao, entrada.cliente from problema, entrada where problema.id_entrada = entrada.id_entrada"
+    "select tarefa.descricao from tarefa,entrada,checklist where  entrada.id_checklist = checklist.id_checklist  and tarefa.id_checklist = checklist.id_checklist and entrada.cliente = $1", [id]
   )
   .catch(e => console.error(e.stack))
 
-    return data.rows ? data.rows : null
+  return data.rows ? data.rows : null
 }
 
-const getListaTarefas = async () => {
+const getVeiculoById = async (id) => {
   let data = await db.query(
-    "select tarefa.descricao, entrada.cliente from tarefa,entrada,checklist where entrada.id_checklist = checklist.id_checklist and tarefa.id_checklist = checklist.id_checklist"
+    "select estado from veiculo, orcamento where orcamento.id_veiculo = veiculo.id_veiculo and orcamento.id_cliente = $1", [id]
   )
   .catch(e => console.error(e.stack))
 
@@ -129,7 +148,9 @@ module.exports = {
   getWorkviewInfo,
   getTarefasCompletas,
   getdetalhesOrcamento,
-  getLinks,
   getProblemas,
-  getListaTarefas
+  getListaTarefas,
+  getClientByLink,
+  getVeiculoById,
+  getNomeCliente
 }
