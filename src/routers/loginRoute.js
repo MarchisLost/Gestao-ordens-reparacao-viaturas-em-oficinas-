@@ -1,5 +1,5 @@
 const express = require('express')
-const router = express.Router()
+const router = new express.Router()
 const bcrypt = require('bcrypt')
 const path = require('path')
 
@@ -12,23 +12,22 @@ router.post('/loginAtempt', async (req, res) => {
   let pass = req.body.pass
 
   const data = await getLogin(username)
-  console.log(data);
+  // console.log(data);
 
   //Receives worker data, checks his role and sends the right view
   if (data === null) {
-    res.status(404).sendFile(path.join(__dirname, '../../public', '/index.html'))
+    res.status(404).res.redirect('/')
   } else {
     bcrypt.compare(pass, data.password, (err, res2) => {
       if (res2 === true) {
         if (data.cargo === 'mecanico') {
-          res.sendFile(path.join(__dirname, '../../public', '/html/workview.html'))
-          /* res.render('/workview') */ //WHY DOESNT THIS FUCKING THING WORKS
-        } else if (data.cargo === 'rececionista'){
-          res.sendFile(path.join(__dirname, '../../public', '/html/rececionista.html'))
+          res.render('workview')
+        } else if (data.cargo === 'rececionista'){  
+          res.render('rececionista')
         } else if (data.cargo === 'responsavel'){
-          res.sendFile(path.join(__dirname, '../../public', '/html/responsavel.html'))
+          res.render('responsavel')
         } else {
-          res.sendFile(path.join(__dirname, '../../public', '/html/admin.html'))
+          res.render('admin')
         }
       } else {
         res.status(404).sendFile(path.join(__dirname, '../../public', '/index.html'))

@@ -1,32 +1,32 @@
 const express = require('express')
-const router = express.Router()
+const router = new express.Router()
 
 router.get('/mecanicLogin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
 })
 
 router.get('/workview', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/workview.html'))
+  res.render('workview')
 })
 
 router.get('/rececionista', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/rececionista.html'))
+  res.render('rececionista')
 })
 
 router.get('/responsavel', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/responsavel.html'))
+  res.render('responsavel')
 })
 
 router.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/admin.html'))
+  res.render('admin')
 })
 
 router.get('/cliente', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/cliente.html'))
+  res.render('cliente')
 })
 
 router.get('/vistaGeral', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/vistaGeral.html'))
+  res.render('vistaGeral')
 })
 
 module.exports = router

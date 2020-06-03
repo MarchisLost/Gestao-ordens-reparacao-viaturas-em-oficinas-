@@ -45,10 +45,33 @@ const getOrcamento = async (id) => {
     return data.rows ? data.rows : null
 }
 
+// ---------------------------------------------------------------------------------------------
+// TEMPORARY FUNCTIONS
+// ---------------------------------------------------------------------------------------------
+
+const getWorkviewInfo = async () => {
+  let data = await db.query(
+    "SELECT nome, matricula FROM funcionario, veiculo, entrada WHERE veiculo.id_funcionario = funcionario.id_funcionario and veiculo.id_veiculo = entrada.id_veiculo order by entrada.data_entrada desc limit 4")
+    .catch(e => console.error(e.stack))
+
+    return data.rows ? data.rows : null
+}
+
+const getTarefas = async () => {
+  let data = await db.query(
+    "select id_veiculo, id_tarefa, completa from tarefa left join checklist on tarefa.id_checklist = checklist.id_checklist left join entrada on checklist.id_checklist = entrada.id_checklist group by data_entrada,id_veiculo, id_tarefa order by data_entrada desc"
+    )
+    .catch(e => console.error(e.stack))
+
+    return data.rows ? data.rows : null
+}
+
 module.exports = {
   getLogin,
   getVeiculo,
   getVeiculoFuncionario,
   getClient,
-  getOrcamento
+  getOrcamento,
+  getWorkviewInfo,
+  getTarefas
 }
