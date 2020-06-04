@@ -12,7 +12,6 @@ router.post('/loginAtempt', async (req, res) => {
   let pass = req.body.pass
 
   const data = await getLogin(username)
-  // console.log(data);
 
   //Receives worker data, checks his role and sends the right view
   if (data === null) {
@@ -21,7 +20,7 @@ router.post('/loginAtempt', async (req, res) => {
     bcrypt.compare(pass, data.password, (err, res2) => {
       if (res2 === true) {
         if (data.cargo === 'mecanico') {
-          res.render('workview')
+          res.redirect('workview/' + username)
         } else if (data.cargo === 'rececionista'){  
           res.render('rececionista')
         } else if (data.cargo === 'responsavel'){

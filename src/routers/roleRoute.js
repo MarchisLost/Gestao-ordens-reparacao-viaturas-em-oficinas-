@@ -1,15 +1,72 @@
 const express = require('express')
 const router = new express.Router()
 
-const {getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, getProblemas, getListaTarefas, getClientByLink, getVeiculoById, getNomeCliente} = require('../db/templates')
+const {getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, getProblemas, getListaTarefas, getClientByLink, getVeiculoById, getNomeCliente, 
+  getVeiculosByFuncionario, getTarefasVeiculo} = require('../db/templates')
 
 router.get('/mecanicLogin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
 })
 
-router.get('/workview', (req, res) => {
-  res.render('workview')
+// Mecanico
+router.get('/workview/:username', async (req, res) => {
+  const username = req.params.username    // Username do funcionario
+  const veiculos = await getVeiculosByFuncionario(username)   // Veiculos pertencentes a esse funcionario
+
+  let matriculasEspera = []   // Array com as matriculas dos carros em espera
+  let matriculasTrabalho = [] // Array com as matriculas dos carros em reparacao
+
+  let veiculosEspera = []
+  let veiculosReparacao = []
+
+  // Obter matriculas e id dos veiuclos em espera
+  for (i=0; i<veiculos.length; i++) {
+    if (veiculos[i].estado === 'em espera') {
+      matriculasEspera.push(veiculos[i].matricula)
+      veiculosEspera.push(veiculos[i].id_veiculo)
+    }
+    else {
+      matriculasTrabalho.push(veiculos[i].matricula)
+      veiculosReparacao.push(veiculos[i].id_veiculo)
+    }
+  }
+
+  res.render('workview' , {matriculasEspera, matriculasTrabalho, username})
 })
+
+router.get('/getTarefas/:username', async (req, res) => {
+  const tempUsername = req.params.username    // Username do funcionario
+  const username = tempUsername.replace(".json", "")
+
+  const veiculos = await getVeiculosByFuncionario(username)   // Veiculos pertencentes a esse funcionario
+
+  let matriculasEspera = []   // Array com as matriculas dos carros em espera
+  let matriculasTrabalho = [] // Array com as matriculas dos carros em reparacao
+
+  let veiculosEspera = []
+  let veiculosReparacao = []
+
+  // Obter matriculas e id dos veiuclos em espera
+  for (i=0; i<veiculos.length; i++) {
+    if (veiculos[i].estado === 'em espera') {
+      matriculasEspera.push(veiculos[i].matricula)
+      veiculosEspera.push(veiculos[i].id_veiculo)
+    }
+    else {
+      matriculasTrabalho.push(veiculos[i].matricula)
+      veiculosReparacao.push(veiculos[i].id_veiculo)
+    }
+  }
+
+  let tarefasVeiculosEspera = []
+  for (i=0; i<veiculosEspera.length; i++) {
+    tarefasVeiculosEspera.push(await getTarefasVeiculo(veiculosEspera[i]))
+  }
+  // console.log(tarefasVeiculosEspera)
+  
+  res.json(tarefasVeiculosEspera)
+})
+
 
 router.get('/rececionista', (req, res) => {
   res.render('rececionista')

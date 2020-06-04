@@ -3,7 +3,7 @@ const db = require('./db')
 //Gets wroker data, sends it to /loginAtempt for the login
 const getLogin = async (username) => {  
   let data = await db.query(
-    'SELECT * FROM funcionario WHERE nome=$1', [username])
+    'SELECT * FROM funcionario WHERE username=$1', [username])
     .catch(e => console.error(e.stack))
 
   return data.rows[0] ? data.rows[0] : null 
@@ -139,6 +139,28 @@ const createCliente = async () => {
   // console.log(`http://localhost:3000/cliente/${makeid(20)}`);
 }
 
+// ---------------------------------------------------------------------------------------------
+// Mecanico
+// ---------------------------------------------------------------------------------------------
+
+const getVeiculosByFuncionario = async (username) => {
+  let data = await db.query(
+    "select id_veiculo, matricula, estado from veiculo, funcionario where veiculo.id_funcionario = funcionario.id_funcionario and funcionario.username =$1", [username])
+    .catch(e => console.error(e.stack))
+
+    return data.rows ? data.rows : null
+}
+
+const getTarefasVeiculo = async (id) => {
+  let data =await db.query(
+    "select id_veiculo, tarefa.descricao from tarefa, checklist, entrada where tarefa.id_checklist = checklist.id_checklist and entrada.id_checklist = checklist.id_checklist and id_veiculo = $1", [id]
+  )
+  .catch(e => console.error(e.stack))
+
+  return data.rows ? data.rows : null
+}
+
+
 module.exports = {
   getLogin,
   getVeiculo,
@@ -152,5 +174,7 @@ module.exports = {
   getListaTarefas,
   getClientByLink,
   getVeiculoById,
-  getNomeCliente
+  getNomeCliente,
+  getVeiculosByFuncionario,
+  getTarefasVeiculo
 }
