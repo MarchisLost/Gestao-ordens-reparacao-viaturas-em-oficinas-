@@ -9,15 +9,6 @@ const getLogin = async (username) => {
   return data.rows[0] ? data.rows[0] : null 
 }
 
-//Get vehicle info
-const getVeiculo = async (matricula) => {
-  let data = await db.query(
-    'SELECT * FROM veiculo WHERE matricula=$1', [matricula])
-    .catch(e => console.error(e.stack))
-
-    return data.rows[0] ? data.rows[0] : null
-}
-
 //Get vehicles for x worker using id
 const getVeiculoFuncionario = async (id) => {
   let data = await db.query(
@@ -160,6 +151,55 @@ const getTarefasVeiculo = async (id) => {
   return data.rows ? data.rows : null
 }
 
+const getTarefasIncompletas = async (id) => {
+  let data =await db.query(
+    "select id_veiculo, id_entrada ,tarefa.descricao, tarefa.completa, tarefa.id_tarefa  from tarefa, checklist, entrada  where tarefa.id_checklist = checklist.id_checklist  and entrada.id_checklist = checklist.id_checklist and id_veiculo = $1 and tarefa.completa = 0", [id]
+  )
+  .catch(e => console.error(e.stack))
+
+  return data.rows ? data.rows : null
+}
+
+const getVeiculo = async (id, estado) => {
+  let data = await db.query(
+    "update veiculo set estado = $1 WHERE id_veiculo=$2", [estado, id])
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null
+}
+
+const markTaskAsCompleted = async (idTarefa) => {
+  let data = await db.query(
+    "update tarefa set completa = 1 WHERE id_tarefa=$1", [idTarefa])
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null 
+}
+
+const getIdChecklistByEntrada = async (idEntrada) => {
+  let data = await db.query(
+    "select id_checklist from entrada where id_entrada = $1", [idEntrada])
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null 
+}
+
+const adicionarTarefa = async (acao, descricao, obrigatorio, idChecklist, newID) => {
+  let data = await db.query(
+    "INSERT INTO tarefa (acao, descricao, obrigatorio, id_checklist, completa, id_tarefa) VALUES ($1, $2, $3, $4, 0, $5)", [acao, descricao, obrigatorio, idChecklist, newID])
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null 
+}
+
+const maxIDTarefa = async () => {
+  let data = await db.query(
+    "select max(id_tarefa) from tarefa")
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null 
+}
+
 
 module.exports = {
   getLogin,
@@ -176,5 +216,10 @@ module.exports = {
   getVeiculoById,
   getNomeCliente,
   getVeiculosByFuncionario,
-  getTarefasVeiculo
+  getTarefasVeiculo,
+  getTarefasIncompletas,
+  markTaskAsCompleted,
+  getIdChecklistByEntrada,
+  adicionarTarefa,
+  maxIDTarefa
 }

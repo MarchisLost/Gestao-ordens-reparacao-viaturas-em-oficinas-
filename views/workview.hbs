@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  <title>Vista do Mecanico</title>
 
   <!--===============================================================================================-->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -49,16 +49,16 @@
     <div class="row">
 
       <div class="col">
-        <div class="card card-body">
+        <div id="carrosReparacaoColuna" class="card card-body">
 
-          <p>Veículo 1
+          <p hidden>Veículo 1
             <button type="button" class="btn btn-outline-secondary">Sair da Viatura</button>
             <button type="button" class="btn btn-outline-success">Terminar Veículo</button>
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2"
               aria-expanded="false" aria-controls="multiCollapseExample2">View</button>
           </p>
 
-          <div class="collapse multi-collapse" id="multiCollapseExample2">
+          <div class="collapse multi-collapse" id="multiCollapseExample2" hidden>
             <div class="card card-body">
               <div>
                 <p>Tarefa 1
@@ -74,39 +74,48 @@
 
             <p></p>
           </div>
-
-          <p>Veículo 2
-            <button type="button" class="btn btn-outline-secondary">Sair da Viatura</button>
-            <button type="button" class="btn btn-outline-success">Terminar Veículo</button>
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2"
-              aria-expanded="false" aria-controls="multiCollapseExample2">View</button>
-          </p>
-
-          <p>Veículo 3
-            <button type="button" class="btn btn-outline-secondary">Sair da Viatura</button>
-            <button type="button" class="btn btn-outline-success">Terminar Veículo</button>
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2"
-              aria-expanded="false" aria-controls="multiCollapseExample2">View</button>
-          </p>
-
         </div>
       </div>
 
       <div class="col">
         <div id="carrosEsperaColuna" class="card card-body">
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <p hidden>Veículo 1
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample6"
-              aria-expanded="false" aria-controls="multiCollapseExample6">View</button>
-          </p>
-
-          <div class="collapse multi-collapse" id="multiCollapseExample6">
-            <div class="card card-body">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
-              keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Nova Tarefa</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="form1" method="post">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Acao</label>
+              <input type="text" class="form-control" id="acaoInput" aria-describedby="emailHelp"
+                placeholder="Escreva aqui..." required>
             </div>
-          </div>
-
+            <div class="form-group">
+              <label for="exampleInputEmail1">Descricao</label>
+              <input type="text" class="form-control" id="descricaoInput" aria-describedby="emailHelp"
+                placeholder="Escreva aqui..." required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="checkBoxObrigatorio">
+              <label class="form-check-label" for="exampleCheck1">Obrigatorio</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="dismissalButton" class="btn btn-warning" data-dismiss="modal">Close</button>
+          <button id="botaoAdicionarTarefa" type="submit" form="form1" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
@@ -119,16 +128,25 @@
 </body>
 
 <script>
+  // Em espera
   let matriculasString = document.getElementById("matriculasEspera").innerHTML
   var arrayMatriculasEspera = matriculasString.split(',')
+
+  // Reparacao
+  let matriculasTrabalhoString = document.getElementById("matriculasTrabalho").innerHTML
+  var arrayMatriculasReparacao = matriculasTrabalhoString.split(',')
+
+  // Colunas
   var carrosEspera = document.getElementById("carrosEsperaColuna")
+  var carrosTrabalho = document.getElementById("carrosReparacaoColuna")
 
-  let btns = []
-
+  // Nome utilizador
   var nomeUser = document.getElementById("usernameUtilizador").innerText
 
   let jsonData;
+  let jsonData2;
 
+  // Fetch das tarefas pertencentes aos veiculos em espera
   fetch('http://localhost:3000/getTarefas/' + nomeUser + '.json').then(
     async (result) => {
       // console.log(result);
@@ -136,58 +154,265 @@
       // console.log(jsonData[0][0].descricao)
       // jsonData.forEach(el => { console.log(el) })
 
-      for (i = 0; i < arrayMatriculasEspera.length; i++) {
-        var linha = document.createElement('p')
-        linha.setAttribute('id', 'veiculo' + [i + 1])
-        linha.innerHTML = arrayMatriculasEspera[i]
+      if (jsonData.length > 0) {
+        for (i = 0; i < arrayMatriculasEspera.length; i++) {
+          var linha = document.createElement('p')
+          linha.setAttribute('id', 'veiculo' + [i + 1])
+          linha.setAttribute('style', "display:-webkit-inline-box;")
+          linha.innerHTML = arrayMatriculasEspera[i]
 
-        temp = document.createElement('button')
-        temp.setAttribute("id", "botaoEspera" + [i + 1])
-        temp.setAttribute("class", "btn btn-primary")
-        temp.setAttribute("data-toggle", "collapse")
-        temp.setAttribute("aria-expanded", "false")
-        temp.setAttribute("data-target", "#detalhesEspera" + [i + 1])
-        temp.setAttribute("aria-controls", "detalhesEspera" + [i + 1])
-        temp.innerHTML = "View"
+          // Criar botao view
+          temp = document.createElement('button')
+          temp.setAttribute("id", "botaoEspera" + [i + 1])
+          temp.setAttribute("class", "btn btn-primary")
+          temp.setAttribute("data-toggle", "collapse")
+          temp.setAttribute("aria-expanded", "false")
+          temp.setAttribute("data-target", "#detalhesEspera" + [i + 1])
+          temp.setAttribute("aria-controls", "detalhesEspera" + [i + 1])
+          temp.setAttribute("style", "margin-right: 5px; margin-left: 5px;")
+          temp.innerHTML = "View"
 
-        linha.appendChild(temp)
+          // Criar botao comecar
+          comeca = document.createElement('button')
+          comeca.setAttribute("id", jsonData[i][0].id_veiculo)
+          comeca.setAttribute("class", "btn btn-success")
+          comeca.setAttribute("type", "submit")
+          comeca.innerHTML = "Comecar"
 
-        carrosEspera.appendChild(linha)
+          // Criar form para botao comecar
+          formComeca = document.createElement('form')
+          formComeca.setAttribute('id', 'formComeca' + jsonData[i][0].id_veiculo)
+          formComeca.setAttribute('method', 'post')
+          formComeca.setAttribute('action', 'http://localhost:3000/comecarCarro/' + nomeUser + '/' + jsonData[i][0].id_veiculo)
 
-        firstDiv = document.createElement('div')
-        firstDiv.setAttribute("class", "collapse multi-collapse")
-        firstDiv.setAttribute("id", "detalhesEspera" + [i + 1])
+          // Criar div com form group
+          divForm = document.createElement('div')
+          divForm.setAttribute('class', 'form-group')
 
-        secondDiv = document.createElement('div')
-        secondDiv.setAttribute("class", "card card-body")
-        secondDiv.setAttribute("id", "divEspera" + [i + 1])
-        secondDiv.setAttribute("style", "white-space: pre-wrap;")
+          divForm.appendChild(comeca)
 
-        firstDiv.appendChild(secondDiv)
+          formComeca.appendChild(divForm)
 
-        carrosEspera.appendChild(firstDiv)
+          linha.appendChild(temp)
+          // linha.appendChild(comeca)
+          linha.appendChild(formComeca)
 
-        //carrosEspera.appendChild(document.createElement('br'))
+          carrosEspera.appendChild(linha)
 
-        btns.push(temp)
+          // Criar primeiro div
+          firstDiv = document.createElement('div')
+          firstDiv.setAttribute("class", "collapse multi-collapse")
+          firstDiv.setAttribute("id", "detalhesEspera" + [i + 1])
 
+          // Criar segundo div
+          secondDiv = document.createElement('div')
+          secondDiv.setAttribute("class", "card card-body")
+          secondDiv.setAttribute("id", "divEspera" + [i + 1])
+          secondDiv.setAttribute("style", "white-space: pre-wrap;")
+
+          firstDiv.appendChild(secondDiv)
+
+          carrosEspera.appendChild(firstDiv)
+
+          //carrosEspera.appendChild(document.createElement('br'))
+        }
+
+        for (i = 0; i < jsonData.length; i++) {
+          var text = "";
+          for (j = 0; j < jsonData[i].length; j++) {
+            if (text != "") {
+              text = text + "\n-" + jsonData[i][j].descricao
+            }
+            else {
+              text = text + jsonData[i][j].descricao
+            }
+          }
+          if (document.getElementById("divEspera" + [i + 1]).id === "divEspera" + [i + 1]) {
+            document.getElementById("divEspera" + [i + 1]).innerHTML = "-" + text
+          }
+          text = ""
+        }
+      }
+    }
+  );
+
+  // Fetch das tarefas pertencentes aos veiculos em reparacao
+  fetch('http://localhost:3000/emReparacao/' + nomeUser + '.json').then(
+    async (result) => {
+      jsonData2 = await result.json();
+      let botoesAdicionar = []
+
+      if (jsonData2.length > 0) {
+        for (i = 0; i < arrayMatriculasReparacao.length; i++) {
+          var linha = document.createElement('p')
+          linha.setAttribute('id', 'veiculoReparacao' + [i + 1])
+          linha.setAttribute('style', "display:-webkit-inline-box;")
+          linha.innerHTML = arrayMatriculasReparacao[i]
+
+          // Criar botao view
+          temp = document.createElement('button')
+          temp.setAttribute("id", "botaoReparacao" + [i + 1])
+          temp.setAttribute("class", "btn btn-primary")
+          temp.setAttribute("data-toggle", "collapse")
+          temp.setAttribute("aria-expanded", "false")
+          temp.setAttribute("data-target", "#detalhesReparacao" + [i + 1])
+          temp.setAttribute("aria-controls", "detalhesReparacao" + [i + 1])
+          temp.setAttribute("style", "margin-right: 5px; margin-left: 5px;")
+          temp.innerHTML = "View"
+
+          // Criar botao sair
+          sair = document.createElement('button')
+          sair.setAttribute("id", "sairVeiculo" + jsonData2[i][0].id_veiculo)
+          sair.setAttribute("class", "btn btn-info")
+          sair.setAttribute("type", "submit")
+          sair.setAttribute("style", "margin-right: 5px;")
+          sair.innerHTML = "Sair"
+
+          // Criar form para botao sair
+          formSair = document.createElement('form')
+          formSair.setAttribute('id', 'formSair' + jsonData2[i][0].id_veiculo)
+          formSair.setAttribute('method', 'post')
+          formSair.setAttribute('action', 'http://localhost:3000/sairCarro/' + nomeUser + '/' + jsonData2[i][0].id_veiculo)
+
+          // Criar div com form group para botao Sair
+          divFormSair = document.createElement('div')
+          divFormSair.setAttribute('class', 'form-group')
+
+          divFormSair.appendChild(sair)
+          formSair.appendChild(divFormSair)
+
+          // Criar botao terminar
+          terminar = document.createElement('button')
+          terminar.setAttribute("id", "sairVeiculo" + jsonData2[i][0].id_veiculo)
+          terminar.setAttribute("class", "btn btn-success")
+          terminar.setAttribute("type", "submit")
+          terminar.innerHTML = "Terminar"
+
+          // Criar form para botao terminar
+          formTerminar = document.createElement('form')
+          formTerminar.setAttribute('id', 'formSair' + jsonData2[i][0].id_veiculo)
+          formTerminar.setAttribute('method', 'post')
+          formTerminar.setAttribute('action', 'http://localhost:3000/terminarCarro/' + nomeUser + '/' + jsonData2[i][0].id_veiculo)
+
+          // Criar div com form group para botao Terminar
+          divFormTerminar = document.createElement('div')
+          divFormTerminar.setAttribute('class', 'form-group')
+
+          divFormTerminar.appendChild(terminar)
+          formTerminar.appendChild(divFormTerminar)
+
+          linha.appendChild(temp)
+          linha.appendChild(formSair)
+          linha.appendChild(formTerminar)
+
+          carrosTrabalho.appendChild(linha)
+
+          // Criar botao Adicionar
+          var addTarefa = document.createElement('button')
+          addTarefa.setAttribute('class', "btn btn-secondary")
+          addTarefa.setAttribute('id', "botaoAdicionar" + jsonData2[i][0].id_entrada)
+          addTarefa.setAttribute('style', "width:10%; margin-top: 5px;")
+          addTarefa.setAttribute('data-toggle', "modal")
+          addTarefa.setAttribute('data-target', "#exampleModal")
+
+          var plusIcon = document.createElement('i')
+          plusIcon.setAttribute('class', "fa fa-plus")
+
+          addTarefa.appendChild(plusIcon)
+
+          botoesAdicionar.push(addTarefa.id)
+
+          // Criar primeiro div
+          firstDiv = document.createElement('div')
+          firstDiv.setAttribute("class", "collapse multi-collapse")
+          firstDiv.setAttribute("id", "detalhesReparacao" + [i + 1])
+
+          // Criar segundo div
+          secondDiv = document.createElement('div')
+          secondDiv.setAttribute("class", "card card-body")
+          secondDiv.setAttribute("id", "divReparacao" + [i + 1])
+          secondDiv.setAttribute("style", "white-space: pre-wrap;")
+
+          firstDiv.appendChild(secondDiv)
+          firstDiv.appendChild(addTarefa)
+
+          carrosTrabalho.appendChild(firstDiv)
+        }
+
+        for (i = 0; i < jsonData2.length; i++) {
+          var text = "";
+          for (j = 0; j < jsonData2[i].length; j++) {
+
+            var text = "";
+
+            // Criar form
+            completeTarefaForm = document.createElement('form')
+            completeTarefaForm.setAttribute('id', 'completeTarefaForm' + [j + 1])
+            completeTarefaForm.setAttribute('method', 'post')
+            completeTarefaForm.setAttribute('action', 'http://localhost:3000/updateTarefa/' + nomeUser + "/" + jsonData2[i][j].id_tarefa)
+
+            // Criar checkmark
+            done = document.createElement('button')
+            done.setAttribute("id", "idTarefa" + jsonData2[i][j].id_tarefa)
+            done.setAttribute("class", "btn btn-dark")
+            done.setAttribute('style', "margin-left: 5px;")
+            done.innerHTML = "✓"
+
+            // Criar div com form group para botao Terminar
+            divFormCompleteTarefa = document.createElement('div')
+            divFormCompleteTarefa.setAttribute('class', 'form-group')
+
+            divFormCompleteTarefa.appendChild(done)
+            completeTarefaForm.appendChild(divFormCompleteTarefa)
+
+            // Criar paragrafo
+            paragrafo = document.createElement('p')
+            paragrafo.setAttribute('id', "paragrafo" + [j + 1])
+            paragrafo.setAttribute('style', "display:-webkit-inline-box;")
+            paragrafo.innerHTML = ""
+
+            if (text != "") {
+              text = text + "\n-" + jsonData2[i][j].descricao
+              paragrafo.innerHTML = text
+              paragrafo.appendChild(completeTarefaForm)
+              document.getElementById("divReparacao" + [i + 1]).appendChild(paragrafo)
+            }
+            else {
+              text = "-" + text + jsonData2[i][j].descricao
+              paragrafo.innerHTML = text
+              paragrafo.appendChild(completeTarefaForm)
+              if (document.getElementById("divReparacao" + [i + 1]) != null) {
+                document.getElementById("divReparacao" + [i + 1]).appendChild(paragrafo)
+              }
+            }
+            //console.log(paragrafo)
+          }
+          text = ""
+        }
       }
 
-      for (i = 0; i < jsonData.length; i++) {
-        var text = "";
-        for (j = 0; j < jsonData[i].length; j++) {
-          if (text != "") {
-            text = text + "\n-" + jsonData[i][j].descricao
-          }
-          else {
-            text = text + jsonData[i][j].descricao
-          }
-        }
-        if (document.getElementById("divEspera" + [i + 1]).id === "divEspera" + [i + 1]) {
-          document.getElementById("divEspera" + [i + 1]).innerHTML = "-" + text
-        }
-        text = ""
-      }
+      var queryResult = document.getElementsByClassName('btn btn-secondary');
+      Array.from(queryResult).forEach(function (element) {
+        element.addEventListener("click", (e) => {
+          var botaoID = element.id
+          var entradaID = botaoID.replace('botaoAdicionar','');
+
+          document.getElementById('botaoAdicionarTarefa').addEventListener('click', (e) => {
+            var formAddTarefa = document.querySelector('#form1')
+            var valorAcao = document.querySelector('#acaoInput').value
+            var valorDescricao = document.getElementById('descricaoInput').value
+            var valorCheckBock = document.getElementById('checkBoxObrigatorio').checked
+
+            if (valorDescricao === "") {
+              valorDescricao = "vazio"
+            }
+            
+            formAddTarefa.setAttribute('action', 'http://localhost:3000/')
+
+            formAddTarefa.action = 'http://localhost:3000/addTarefa/' + nomeUser + '/' + entradaID + '/' + valorAcao + '/' + valorDescricao + '/' + valorCheckBock
+          })
+        });
+      });
     }
   );
 </script>
