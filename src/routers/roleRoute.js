@@ -4,6 +4,7 @@ const router = new express.Router()
 const {getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, getProblemas, getListaTarefas, getClientByLink, getVeiculoById, getNomeCliente, 
   getVeiculosByFuncionario, getTarefasVeiculo} = require('../db/templates')
 
+//! provavelmente e melhor tirar mos isto... ja nao faz sentido termos
 router.get('/mecanicLogin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
 })
