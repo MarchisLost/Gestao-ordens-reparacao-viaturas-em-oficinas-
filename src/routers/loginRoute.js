@@ -15,7 +15,7 @@ router.post('/loginAtempt', async (req, res) => {
 
   //Receives worker data, checks his role and sends the right view
   if (data === null) {
-    res.status(404).res.redirect('/')
+    res.status(404).redirect('/')
   } else {
     bcrypt.compare(pass, data.password, (err, res2) => {
       if (res2 === true) {
