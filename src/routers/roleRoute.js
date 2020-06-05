@@ -7,6 +7,7 @@ const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, getProblemas
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa,
   getTarefasIncompletas, markTaskAsCompleted } = require('../db/templates')
 
+//! provavelmente e melhor tirar mos isto... ja nao faz sentido termos
 router.get('/mecanicLogin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
 })
