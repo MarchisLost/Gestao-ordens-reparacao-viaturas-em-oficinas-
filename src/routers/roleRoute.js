@@ -2,7 +2,7 @@ const express = require('express')
 const router = new express.Router()
 
 const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, getProblemas, getListaTarefas,
-  getClientByLink, getVeiculoById, getNomeCliente,
+  getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
   getVeiculosByFuncionario, getTarefasVeiculo,
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa,
   getTarefasIncompletas, markTaskAsCompleted } = require('../db/templates')
@@ -175,6 +175,44 @@ router.get('/cliente/:codigo', async (req, res) => {
   const estado = estadoVeiculo[0].estado
 
   res.render('cliente', { nomeCliente, estado, descricaoOrcamento, valorOrcamento, problemaOrcamento, arrayTarefa })
+})
+
+router.post('/orcamentoAprovado/:link', async (req, res) => {
+  
+  const urlCode = req.params.link
+
+  // Get Time
+  function addZero(i) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
+
+  let currentTime;
+
+  function getTime() {
+    var d = new Date();
+    var h = addZero(d.getHours());
+    var m = addZero(d.getMinutes());
+    var s = addZero(d.getSeconds());
+    return  h + ":" + m + ":" + s;
+  }
+
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+  
+  today = yyyy + '-' + mm + '-' + dd;
+  currentTime = getTime()
+
+  var idCliente = await getClientByLink(urlCode)
+  idCliente = idCliente[0].cliente
+
+  const submitDetails = await aprovarOrcamento(today, currentTime, idCliente)
+
+  res.render('aproveSuccess')
 })
 
 //Dashboard

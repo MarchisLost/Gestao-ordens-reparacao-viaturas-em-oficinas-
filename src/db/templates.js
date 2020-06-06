@@ -115,6 +115,15 @@ const getVeiculoById = async (id) => {
   return data.rows ? data.rows : null
 }
 
+const aprovarOrcamento = async (date, time, id) => {
+  let data = await db.query(
+    "update orcamento set dataaprovacao = $1, horaaprovacao = $2, aprovacao = 1 WHERE id_cliente = $3", [date, time, id]
+  )
+  .catch(e => console.error(e.stack))
+
+  return data.rows ? data.rows : null
+}
+
 const createCliente = async () => {
   //Function to randomly generate client code
   function makeid(length) {
@@ -129,6 +138,8 @@ const createCliente = async () => {
 
   // console.log(`http://localhost:3000/cliente/${makeid(20)}`);
 }
+
+
 
 // ---------------------------------------------------------------------------------------------
 // Mecanico
@@ -221,5 +232,6 @@ module.exports = {
   markTaskAsCompleted,
   getIdChecklistByEntrada,
   adicionarTarefa,
-  maxIDTarefa
+  maxIDTarefa,
+  aprovarOrcamento
 }
