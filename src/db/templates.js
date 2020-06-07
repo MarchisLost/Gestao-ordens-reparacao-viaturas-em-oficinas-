@@ -140,7 +140,6 @@ const createCliente = async () => {
 }
 
 
-
 // ---------------------------------------------------------------------------------------------
 // Mecanico
 // ---------------------------------------------------------------------------------------------
@@ -212,6 +211,51 @@ const maxIDTarefa = async () => {
 }
 
 
+// ---------------------------------------------------------------------------------------------
+// Rececionista
+// ---------------------------------------------------------------------------------------------
+
+const getListaVeiculos = async () => {
+  let data = await db.query(
+    "select id_veiculo, estado, matricula from veiculo")
+    .catch(e => console.error(e.stack))
+
+    return data.rows
+}
+
+const getListaMecanicos = async () => {
+  let data = await db.query(
+    "select username from funcionario where cargo = 'mecanico'")
+    .catch(e => console.error(e.stack))
+
+    return data.rows
+}
+
+const maxIDVeiculo = async () => {
+  let data = await db.query(
+    "select max(id_veiculo) from veiculo")
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null 
+}
+
+const getFuncionarioByUsername = async (username) => {
+  let data = await db.query(
+    "select id_funcionario from funcionario where username = $1", [username])
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null 
+}
+
+const adicionarVeiculo = async (newID, matricula, cor, marca, modelo, funcionario) => {
+  let data = await db.query(
+    "INSERT INTO veiculo (id_veiculo, matricula, cor, marca, modelo, estado,  id_funcionario) VALUES ($1, $2, $3, $4, $5, 'em espera', $6)", [newID, matricula, cor, marca, modelo, funcionario])
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null 
+}
+
+
 module.exports = {
   getLogin,
   getVeiculo,
@@ -233,5 +277,10 @@ module.exports = {
   getIdChecklistByEntrada,
   adicionarTarefa,
   maxIDTarefa,
-  aprovarOrcamento
+  aprovarOrcamento,
+  getListaVeiculos,
+  getListaMecanicos,
+  adicionarVeiculo,
+  maxIDVeiculo,
+  getFuncionarioByUsername
 }

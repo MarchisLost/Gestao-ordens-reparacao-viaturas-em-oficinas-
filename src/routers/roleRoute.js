@@ -1,16 +1,18 @@
 const express = require('express')
 const router = new express.Router()
 
-const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, getProblemas, getListaTarefas,
+const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, 
+  getProblemas, getListaTarefas, getFuncionarioByUsername,
   getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
-  getVeiculosByFuncionario, getTarefasVeiculo,
-  getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa,
-  getTarefasIncompletas, markTaskAsCompleted } = require('../db/templates')
+  getVeiculosByFuncionario, getTarefasVeiculo, maxIDVeiculo,
+  getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa, getListaMecanicos,
+  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo } = require('../db/templates')
 
 //! provavelmente e melhor tirar mos isto... ja nao faz sentido termos
 router.get('/mecanicLogin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
 })
+
 
 // Mecanico
 router.get('/workview/:username', async (req, res) => {
@@ -44,13 +46,11 @@ router.get('/getTarefas/:username', async (req, res) => {
 
   const veiculos = await getVeiculosByFuncionario(username)   // Veiculos pertencentes a esse funcionario
 
-  let matriculasEspera = []   // Array com as matriculas dos carros em espera
   let veiculosEspera = []
 
   // Obter matriculas e id dos veiuclos em espera
   for (i = 0; i < veiculos.length; i++) {
     if (veiculos[i].estado === 'em espera') {
-      matriculasEspera.push(veiculos[i].matricula)
       veiculosEspera.push(veiculos[i].id_veiculo)
     }
   }
@@ -142,14 +142,51 @@ router.post('/addTarefa/:username/:idEntrada/:textoAcao/:textoDescricao/:obrigat
   res.redirect('/workview/' + username)
 })
 
-router.get('/rececionista', (req, res) => {
-  res.render('rececionista')
+
+// Rececionista
+router.get('/rececionista/:username', async (req, res) => {
+  const user = req.params.username
+
+  res.render('rececionista', {user})
 })
 
+router.get('/getVeiculos', async (req, res) => {
+  const veiculos = await getListaVeiculos()
+
+  res.json(veiculos)
+})
+
+router.get('/getMecanicos', async (req, res) => {
+  const mecanicos = await getListaMecanicos()
+
+  res.json(mecanicos)
+})
+
+router.post('/adicionarVeiculo', async (req, res) => {
+
+  const matriculaVeiculo = req.body.matricula
+  const corVeiculo = req.body.cor
+  const marcaVeiculo = req.body.marca
+  const modeloVeiculo = req.body.modelo
+  const mecanicoEncarregue = req.body.escolhaFuncionario
+  const idMecanico = await getFuncionarioByUsername(mecanicoEncarregue)
+
+  const idVeiculo = await maxIDVeiculo()
+
+  idVeiculo.max = idVeiculo.max + 1
+
+  const novoVeiculo = await adicionarVeiculo(idVeiculo.max, matriculaVeiculo, corVeiculo, marcaVeiculo, modeloVeiculo, idMecanico.id_funcionario)
+
+  res.redirect('/rececionista/' + req.body.nomeRececionista)
+})
+
+
+// Responsavel
 router.get('/responsavel', (req, res) => {
   res.render('responsavel')
 })
 
+// Admin
 router.get('/admin', (req, res) => {
   res.render('admin')
 })

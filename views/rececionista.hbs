@@ -1,79 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
-  
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vista Rececionista</title>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vista Rececionista</title>
 
   <!--===============================================================================================-->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <!--===============================================================================================-->
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
   <!--===============================================================================================-->
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <nav class="navbar navbar-light bg-light">
-      <form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="Procurar Veículo" aria-label="Procurar Veículo">
-        <button class="btn btn-secondary" type="button">
-          <i class="fa fa-search"></i>
+  <nav class="navbar navbar-light bg-light">
+    <form class="form-inline" id="formProcura">
+      <input id="procurarVeiculo" class="form-control mr-sm-2" type="search" placeholder="Procurar Veículo"
+        aria-label="Procurar Veículo">
+      <button class="btn btn-secondary" type="button" id="botaoProcurar">
+        <i class="fa fa-search"></i>
+      </button>
+    </form>
+    <form action="/logout" method="POST">
+      <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Logout</button>
+    </form>
+
+  </nav>
+
+  <br>
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <p class="text-center">Lista de veículos</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+
+        <div id="divPrincipal" class="card card-body">
+
+        </div>
+
+        <br>
+
+        <button class="btn btn-dark" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"> Adicionar
+            Veiculo</i>
         </button>
-      </form>
-      <form action="/logout" method="POST">
-        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Logout</button>
-      </form>
-      
-    </nav>
-  
-    <br>
+        <button class="btn btn-warning" id="atualizarBotao">Atualizar Pagina</button>
 
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <p class="text-center">Lista de veículos</p>
-        </div>
       </div>
     </div>
+  </div>
 
-    <div class="container">
-      <div class="row">
-        <div class="col">
-            <div class="card card-body">
-
-              <p>Veículo 1
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Consultar estado</button>
-              </p>
-
-              <div class="collapse multi-collapse" id="multiCollapseExample2">
-                <div class="card card-body">
-                  <div>
-                    <p style="font-style: italic;">Estado: Em reparação (Última atualização: 10s atrás)</p>
-                  </div>
-                  <div>
-                    <p>Nao sei</p>
-                    <p>O que colocar mais</p>
-                  </div>
-                </div>
-                <br>
-              </div>
-
-              <p>Veículo 2
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Consultar estado</button>
-              </p>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Adicionar Veiculo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="form1" method="post">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Matricula</label>
+              <input type="text" id="matricula" name="matricula" class="form-control" id="acaoInput"
+                aria-describedby="emailHelp" placeholder="Escreva aqui..." required>
             </div>
-            <br>
-            <button class="btn btn-dark"><i class="fa fa-plus"> Adicionar Veiculo</i></button>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Cor</label>
+              <input type="text" class="form-control" name="cor" id="cor" aria-describedby="emailHelp"
+                placeholder="Escreva aqui..." required>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Marca</label>
+              <input type="text" class="form-control" name="marca" id="marca" aria-describedby="emailHelp"
+                placeholder="Escreva aqui..." required>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Modelo</label>
+              <input type="text" class="form-control" name="modelo" id="modelo" aria-describedby="emailHelp"
+                placeholder="Escreva aqui..." required>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Mecanico</label>
+              <select id="escolhaFuncionario" name="escolhaFuncionario" class="custom-select" required>
+                <option value="">---</option>
+              </select>
+            </div>
+            <div class="form-group" hidden>
+              <input type="text" class="form-control" name="nomeRececionista" id="nomeRececionista" aria-describedby="emailHelp"
+                placeholder="Escreva aqui..." hidden>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="dismissalButton" class="btn btn-warning" data-dismiss="modal">Close</button>
+          <button id="botaoAdicionarVeiculo" type="submit" form="form1" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
 
-  <!-- <script src="../js/logout.js"></script> -->
+
+<script>
+  fetch('http://localhost:3000/getVeiculos/').then(
+    async (result) => {
+
+      jsonData = await result.json();
+
+      // console.log(jsonData)
+
+      if (jsonData.length > 0) {
+        for (i = 0; i < jsonData.length; i++) {
+          // Designacao do veiculo
+          var designacaoVeiculo = document.createElement('p')
+          designacaoVeiculo.setAttribute('id', 'idVeiculo' + jsonData[i].id_veiculo)
+          designacaoVeiculo.innerHTML = jsonData[i].matricula
+
+          // Botao Consultar estado
+          botaoConsultar = document.createElement('button')
+          botaoConsultar.setAttribute("id", "botaoConsultar" + jsonData[i].id_veiculo)
+          botaoConsultar.setAttribute("class", "btn btn-primary")
+          botaoConsultar.setAttribute("data-toggle", "collapse")
+          botaoConsultar.setAttribute("data-target", "#detalhesReparacao" + jsonData[i].id_veiculo)
+          botaoConsultar.setAttribute("style", "margin-left: 7px;")
+          botaoConsultar.innerHTML = "Consultar Estado"
+
+          designacaoVeiculo.appendChild(botaoConsultar)
+
+          // Div Detalhes (Principal)
+          var divDetalhes = document.createElement('div')
+          divDetalhes.setAttribute('class', 'collapse multi-collapse')
+          divDetalhes.setAttribute('id', 'detalhesReparacao' + jsonData[i].id_veiculo)
+
+          // Div Detalhes (body)
+          var divBody = document.createElement('div')
+          divBody.setAttribute('class', 'card card-body')
+
+          // Div Estado
+          var divEstado = document.createElement('div')
+
+          // Paragrafo Estado
+          var estadoVeiculo = document.createElement('p')
+          estadoVeiculo.setAttribute('style', 'font-style: italic;')
+          estadoVeiculo.innerHTML = "Estado: " + jsonData[i].estado
+
+          // Detalhes Veiculo (Div)
+          var detalhesVeiculoDiv = document.createElement('div')
+
+          divEstado.appendChild(estadoVeiculo)
+
+          divBody.appendChild(divEstado)
+          divBody.appendChild(detalhesVeiculoDiv)
+
+          divDetalhes.appendChild(divBody)
+
+          linebreak = document.createElement("br");
+          divDetalhes.appendChild(linebreak);
+
+          // Main
+          var mainDiv = document.getElementById('divPrincipal')
+
+          mainDiv.appendChild(designacaoVeiculo)
+          mainDiv.appendChild(divDetalhes)
+
+        }
+      }
+
+      // Botao Procurar
+      document.getElementById('botaoProcurar').addEventListener('click', (e) => {
+        var formProcurar = document.querySelector('#formProcura')
+        let veiculoProcurado;
+
+        if (document.getElementById('procurarVeiculo').value !== "") {
+
+          // Grab specific vehicle information
+          veiculoProcurado = jsonData.filter(veiculo => veiculo.matricula === document.getElementById('procurarVeiculo').value)
+          // console.log(veiculoProcurado[0])
+
+          // Apagar caixa de texto
+          formProcurar.reset();
+
+          // Apagar Conteudo Div
+          document.getElementById('divPrincipal').innerHTML = ""
+
+          // -------------------------
+          // Load Conteudo Selecionado
+          // -------------------------
+
+          // Designacao do veiculo
+          var designacaoVeiculo = document.createElement('p')
+          designacaoVeiculo.setAttribute('id', 'idVeiculo' + veiculoProcurado[0].id_veiculo)
+          designacaoVeiculo.innerHTML = veiculoProcurado[0].matricula
+
+          // Botao Consultar estado
+          botaoConsultar = document.createElement('button')
+          botaoConsultar.setAttribute("id", "botaoConsultar" + veiculoProcurado[0].id_veiculo)
+          botaoConsultar.setAttribute("class", "btn btn-primary")
+          botaoConsultar.setAttribute("data-toggle", "collapse")
+          botaoConsultar.setAttribute("data-target", "#detalhesReparacao" + veiculoProcurado[0].id_veiculo)
+          botaoConsultar.setAttribute("style", "margin-left: 7px;")
+          botaoConsultar.innerHTML = "Consultar Estado"
+
+          designacaoVeiculo.appendChild(botaoConsultar)
+
+          // Div Detalhes (Principal)
+          var divDetalhes = document.createElement('div')
+          divDetalhes.setAttribute('class', 'collapse multi-collapse')
+          divDetalhes.setAttribute('id', 'detalhesReparacao' + veiculoProcurado[0].id_veiculo)
+
+          // Div Detalhes (body)
+          var divBody = document.createElement('div')
+          divBody.setAttribute('class', 'card card-body')
+
+          // Div Estado
+          var divEstado = document.createElement('div')
+
+          // Paragrafo Estado
+          var estadoVeiculo = document.createElement('p')
+          estadoVeiculo.setAttribute('style', 'font-style: italic;')
+          estadoVeiculo.innerHTML = "Estado: " + veiculoProcurado[0].estado
+
+          // Detalhes Veiculo (Div)
+          var detalhesVeiculoDiv = document.createElement('div')
+
+          divEstado.appendChild(estadoVeiculo)
+
+          divBody.appendChild(divEstado)
+          divBody.appendChild(detalhesVeiculoDiv)
+
+          divDetalhes.appendChild(divBody)
+
+          linebreak = document.createElement("br");
+          divDetalhes.appendChild(linebreak);
+
+          // Main
+          var mainDiv = document.getElementById('divPrincipal')
+
+          mainDiv.appendChild(designacaoVeiculo)
+          mainDiv.appendChild(divDetalhes)
+        }
+
+      })
+    }
+  );
+
+  fetch('http://localhost:3000/getMecanicos/').then(
+    async (result) => {
+
+      jsonData2 = await result.json();
+      //console.log(jsonData2)
+
+      let select = document.getElementById("escolhaFuncionario"), arr = jsonData2
+
+      for (let i = 0; i < arr.length; i++) {
+        let option = document.createElement("OPTION"),
+          txt = document.createTextNode(arr[i].username);
+        option.appendChild(txt);
+        option.setAttribute("value", arr[i].username);
+        select.insertBefore(option, select.lastChild);
+      }
+
+    }
+  );
+
+  document.getElementById('botaoAdicionarVeiculo').addEventListener('click', (e) => {
+    var formAddVeiculo = document.querySelector('#form1')
+    var url = window.location.href
+    var nomeRececionista = url.replace('http://localhost:3000/rececionista/','');
+
+    document.getElementById('nomeRececionista').value = nomeRececionista
+
+    formAddVeiculo.setAttribute('action', 'http://localhost:3000/adicionarVeiculo/')
+  })
+
+  document.getElementById('atualizarBotao').addEventListener('click', (e) => {
+    window.location.reload(true);
+  })
+
+</script>
 
 </html>
