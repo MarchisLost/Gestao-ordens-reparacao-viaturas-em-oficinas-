@@ -29,36 +29,7 @@ app.use(roleRoute)
 app.use(fileRoute)
 app.use(loginRoute)
 
-//TODO find a way to display that the username or password are wrong!!
-
-
-// //test for the function on db/templates to get all the vehicle by plate
-// app.get('/veiculo/:id', async (req, res) => {
-//   const data = await getVeiculo(req.params.id)
-//   console.log("data", data)
-//   res.json({"data": data})
-// })
-
-// //test for the function on db/templates to get the vehicle from x worker
-// app.get('/asd/:id', async (req, res) => {
-//   const data = await getVeiculoFuncionario(req.params.id)
-//   console.log("data", data)
-//   res.json(data)
-// })
-
-// //test for the function on db/templates to get the client by his id
-// app.get('/client/:id', async (req, res) => {
-//   const data = await getClient(req.params.id)
-//   console.log("data", data)
-//   res.json(data)
-// })
-
-// //test for the function on db/templates to get the orçamento by the client id
-// app.get('/orc/:id', async (req, res) => {
-//   const data = await getOrcamento(req.params.id)
-//   console.log("data", data)
-//   res.json(data)
-// })
+//TODO find a way to display that the username or password are wrong!! maybe bootstrap messages
 
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`)
