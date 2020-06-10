@@ -6,12 +6,7 @@ const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento,
   getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
   getVeiculosByFuncionario, getTarefasVeiculo, maxIDVeiculo,
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa, getListaMecanicos,
-  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo } = require('../db/templates')
-
-//! provavelmente e melhor tirar mos isto... ja nao faz sentido termos
-router.get('/mecanicLogin', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', '/html/mecLogin.html'))
-})
+  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, getTarefasAllVeiculos } = require('../db/templates')
 
 
 // Mecanico
@@ -48,7 +43,7 @@ router.get('/getTarefas/:username', async (req, res) => {
 
   let veiculosEspera = []
 
-  // Obter matriculas e id dos veiuclos em espera
+  // Obter matriculas e id dos veiculos em espera
   for (i = 0; i < veiculos.length; i++) {
     if (veiculos[i].estado === 'em espera') {
       veiculosEspera.push(veiculos[i].id_veiculo)
@@ -59,7 +54,6 @@ router.get('/getTarefas/:username', async (req, res) => {
   for (i = 0; i < veiculosEspera.length; i++) {
     tarefasVeiculosEspera.push(await getTarefasVeiculo(veiculosEspera[i]))
   }
-  // console.log(tarefasVeiculosEspera)
 
   res.json(tarefasVeiculosEspera)
 })
@@ -181,10 +175,81 @@ router.post('/adicionarVeiculo', async (req, res) => {
 })
 
 
-// Responsavel
-router.get('/responsavel', (req, res) => {
-  res.render('responsavel')
+// Responsavel ------------------------------------------------------
+//Renders the responsavel page and sends matriculas for later purposes
+router.get('/responsavel/:username', async (req, res) => {
+  const user = req.params.username
+
+  //Get all veiculos data
+  const veiculos = await getListaVeiculos()
+
+  // Arrays com as matriculas dos carros
+  let matriculasEspera = []   
+  let matriculasTrabalho = [] 
+  let matriculasProntas = []
+
+  // Obter matriculas e id dos veiuclos
+  for (i = 0; i < veiculos.length; i++) {
+    if (veiculos[i].estado === 'em espera') {
+      matriculasEspera.push(veiculos[i].matricula)
+    }
+    else if (veiculos[i].estado === 'em reparacao') {
+      matriculasTrabalho.push(veiculos[i].matricula)
+    } else {
+      matriculasProntas.push(veiculos[i].matricula)
+    }
+  }
+
+  res.render('responsavel', {user, matriculasEspera, matriculasTrabalho, matriculasProntas})
 })
+
+//It will be called on responsabel hbs page, and this send veiculos id and tarefas
+router.get('/getAllTarefas', async (req, res) => {
+  const veiculos = await getListaVeiculos()
+
+  //Arrays com os ids dos carros
+  let veiculosEspera = []
+  let veiculosReparacao = []
+  let veiculosProntos = []
+
+  // Obter id dos veiculos em espera, reparacao e porntos
+  for (i = 0; i < veiculos.length; i++) {
+    if (veiculos[i].estado === 'em espera') {
+      veiculosEspera.push(veiculos[i].id_veiculo)
+    }
+    else if (veiculos[i].estado === 'em reparacao') {
+      veiculosReparacao.push(veiculos[i].id_veiculo)
+    } else {
+      veiculosProntos.push(veiculos[i].id_veiculo)
+    }
+  }
+
+  //Arrays com as atrefas correspondenets a cada veiculo
+  let tarefasVeiculosEspera = []
+  let tarefasVeiculosReparacao = []
+  let tarefasVeiculosProntos = []
+
+  //Get tarefas from espera
+  for (i = 0; i < veiculosEspera.length; i++) {
+    tarefasVeiculosEspera.push(await getTarefasVeiculo(veiculosEspera[i]))
+  }
+  //console.log('tarefasVeiculosEspera', tarefasVeiculosEspera)
+
+  //Get tarefas from reparacao
+  for (i = 0; i < veiculosReparacao.length; i++) {
+    tarefasVeiculosReparacao.push(await getTarefasVeiculo(veiculosReparacao[i]))
+  }
+  //console.log("tarefasVeiculosReparacao", tarefasVeiculosReparacao)
+
+  //Get tarefas from prontos
+  for (i = 0; i < veiculosProntos.length; i++) {
+    tarefasVeiculosProntos.push(await getTarefasVeiculo(veiculosProntos[i]))
+  }
+  //console.log("tarefasVeiculosProntos", tarefasVeiculosProntos)
+
+  res.json({tarefasVeiculosEspera, tarefasVeiculosReparacao, tarefasVeiculosProntos})
+})
+
 
 // Admin
 router.get('/admin', (req, res) => {

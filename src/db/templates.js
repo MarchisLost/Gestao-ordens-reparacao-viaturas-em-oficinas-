@@ -215,6 +215,7 @@ const maxIDTarefa = async () => {
 // Rececionista
 // ---------------------------------------------------------------------------------------------
 
+//Gets all the veiculos
 const getListaVeiculos = async () => {
   let data = await db.query(
     "select id_veiculo, estado, matricula from veiculo")
@@ -255,6 +256,28 @@ const adicionarVeiculo = async (newID, matricula, cor, marca, modelo, funcionari
     return data.rows[0] ? data.rows[0] : null 
 }
 
+// ---------------------------------------------------------------------------------------------
+// Responsável
+// ---------------------------------------------------------------------------------------------
+
+//
+const getAllVeiculos = async () => {
+  let data = await db.query(
+    "select id_veiculo, matricula, estado, id_funcionario from veiculo", [idVeiculo, matricula, cor, marca, modelo, funcionario])
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null 
+}
+
+//Gets the veiculo id and descriçao
+const getTarefasAllVeiculos = async () => {
+  let data =await db.query(
+    "select id_veiculo, tarefa.descricao from tarefa, checklist, entrada where tarefa.id_checklist = checklist.id_checklist and entrada.id_checklist = checklist.id_checklist"
+  )
+  .catch(e => console.error(e.stack))
+
+  return data.rows ? data.rows : null
+}
 
 module.exports = {
   getLogin,
@@ -282,5 +305,7 @@ module.exports = {
   getListaMecanicos,
   adicionarVeiculo,
   maxIDVeiculo,
-  getFuncionarioByUsername
+  getFuncionarioByUsername,
+  getAllVeiculos,
+  getTarefasAllVeiculos
 }
