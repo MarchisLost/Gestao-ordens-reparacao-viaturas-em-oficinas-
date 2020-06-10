@@ -22,11 +22,11 @@ router.post('/loginAtempt', async (req, res) => {
         if (data.cargo === 'mecanico') {
           res.redirect('workview/' + username)
         } else if (data.cargo === 'rececionista'){  
-          res.render('rececionista')
+          res.redirect('rececionista/' + username)
         } else if (data.cargo === 'responsavel'){
-          res.render('responsavel')
+          res.redirect('responsavel/' + username)
         } else {
-          res.render('admin')
+          res.redirect('admin')
         }
       } else {
         res.status(404).sendFile(path.join(__dirname, '../../public', '/index.html'))
