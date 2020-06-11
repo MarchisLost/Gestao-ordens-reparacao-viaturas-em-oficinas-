@@ -391,7 +391,9 @@
         });
       });
     }
-  );
+  ).catch((e) => {
+    console.log('Couldnt get data from server')
+  })
 </script>
 
 </html>

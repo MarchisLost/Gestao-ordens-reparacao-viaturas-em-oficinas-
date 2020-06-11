@@ -26,7 +26,7 @@ router.post('/loginAtempt', async (req, res) => {
         } else if (data.cargo === 'responsavel'){
           res.redirect('responsavel/' + username)
         } else {
-          res.redirect('admin')
+          res.redirect('admin/' + username)
         }
       } else {
         res.status(404).sendFile(path.join(__dirname, '../../public', '/index.html'))

@@ -354,7 +354,9 @@
                     carrosProntos.appendChild(linha)
                 }
             }
-        )
+        ).catch((e) => {
+            console.log('Couldnt get data from server')
+        })
       
     </script>
 </body>
