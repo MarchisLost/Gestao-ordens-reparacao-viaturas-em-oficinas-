@@ -124,6 +124,7 @@
 
 
   <script>
+    //Fetch veiculos to show on the main screen
     fetch('http://localhost:3000/getVeiculos/').then(
       async (result) => {
 
@@ -266,6 +267,7 @@
       }
     );
 
+    //Fetch mecanicos to show on the modal
     fetch('http://localhost:3000/getMecanicos/').then(
       async (result) => {
 
@@ -276,7 +278,7 @@
 
         for (let i = 0; i < arr.length; i++) {
           let option = document.createElement("OPTION"),
-            txt = document.createTextNode(arr[i].username);
+          txt = document.createTextNode(arr[i].username);
           option.appendChild(txt);
           option.setAttribute("value", arr[i].username);
           select.insertBefore(option, select.lastChild);

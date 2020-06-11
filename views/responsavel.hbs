@@ -19,108 +19,110 @@
 
     </head>
 
-<body>
+    <body>
 
-    <div class="wrapper">
-        <!-- Sidebar Holder -->
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h3>Responsável</h3>
-            </div>
-
-            <ul class="list-unstyled components">
-                <p>{{user}}</p>
-                <li>
-                    <a href="#">Orcamento</a>
-                    <a href="#">Something else</a>
-                    <a href="#">Atribuir Veiculos</a>
-                    <a href="/rececionista/{{user}}">Rececionista</a>
-                    <a href="/workview/{{user}}">Mecanico</a>
-                </li>
-            </ul>
-
-            <ul class="list-unstyled CTAs">
-                <li>
-                    <a href="/" class="download">Logout</a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- Page Content Holder -->
-        <div id="content">
-
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-
-                    <button type="button" id="sidebarCollapse" class="navbar-btn">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fas fa-align-justify"></i>
-                    </button>
+        <div class="wrapper">
+            <!-- Sidebar Holder -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Responsável</h3>
                 </div>
+
+                <ul class="list-unstyled components">
+                    <p>{{user}}</p>
+                    <li>
+                        <a href="#">Orcamento</a>
+                        <a href="#">Something else</a>
+                        <a href="#">Atribuir Veiculos</a>
+                        <a href="/rececionista/{{user}}">Rececionista</a>
+                        <a href="/workview/{{user}}">Mecanico</a>
+                    </li>
+                </ul>
+
+                <ul class="list-unstyled CTAs">
+                    <li>
+                        <a href="/" class="download">Logout</a>
+                    </li>
+                </ul>
             </nav>
-            
-            <h2>Lista Veículos Espera</h2>
-            <div class="container">
-                <div class="row">
 
-                    <div class="col">
-                        <div id="carrosEsperaColuna" class="card card-body">
+            <!-- Page Content Holder -->
+            <div id="content">
 
-                        </div>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+
+                        <button type="button" id="sidebarCollapse" class="navbar-btn">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <i class="fas fa-align-justify"></i>
+                        </button>
                     </div>
-                </div>
-            </div>
-
-            <div class="line"></div>
-
-            <h2>Lista Veículos em Reparação</h2>
-            <div class="container">
-                <div class="row">
-
-                    <div class="col">
-                        <div id="carrosReparacaoColuna" class="card card-body">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="line"></div>
-
-            <h2>Lista veículos Prontos</h2>
-            <div class="container">
+                </nav>
+                
+                <h2>Lista Veículos à Espera</h2>
+                <div class="container">
                     <div class="row">
 
                         <div class="col">
-                            <div id="carrosProntosColuna" class="card card-body">
+                            <div id="carrosEsperaColuna" class="card card-body">
 
                             </div>
                         </div>
                     </div>
                 </div>
 
-            <div class="line"></div>
+                <div class="line"></div>
 
-            <h3>Lorem Ipsum Dolor</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <h2>Lista Veículos em Reparação</h2>
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col">
+                            <div id="carrosReparacaoColuna" class="card card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+
+                <h2>Lista Veículos Prontos</h2>
+                <div class="container">
+                        <div class="row">
+
+                            <div class="col">
+                                <div id="carrosProntosColuna" class="card card-body">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="line"></div>
+
+                <h3>Veículos por Atribuir</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
         </div>
-    </div>
 
-    {{!-- Receive data for later --}}
-    <p id="matriculasEspera" hidden>{{matriculasEspera}}</p>
-    <p id="matriculasTrabalho" hidden>{{matriculasTrabalho}}</p>
-    <p id="matriculasProntas" hidden>{{matriculasProntas}}</p>
+        {{!-- Receive data for later --}}
+        <p id="matriculasEspera" hidden>{{matriculasEspera}}</p>
+        <p id="matriculasTrabalho" hidden>{{matriculasTrabalho}}</p>
+        <p id="matriculasProntas" hidden>{{matriculasProntas}}</p>
 
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+        <!-- jQuery CDN - Slim version (=without AJAX) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <!-- Popper.JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+    </body>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -357,8 +359,9 @@
         ).catch((e) => {
             console.log('Couldnt get data from server')
         })
-      
+        
+        //Veiculos para o responsavel atribuir a mecánicos
+        
     </script>
-</body>
 
 </html>
