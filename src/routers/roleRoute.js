@@ -1,12 +1,14 @@
 const express = require('express')
 const router = new express.Router()
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, 
   getProblemas, getListaTarefas, getFuncionarioByUsername,
   getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
   getVeiculosByFuncionario, getTarefasVeiculo, maxIDVeiculo,
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa, getListaMecanicos,
-  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, getTarefasAllVeiculos } = require('../db/templates')
+  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario } = require('../db/templates')
 
 
 // Mecanico
@@ -137,7 +139,7 @@ router.post('/addTarefa/:username/:idEntrada/:textoAcao/:textoDescricao/:obrigat
 })
 
 
-// Rececionista
+// Rececionista-------------------------------------------------
 router.get('/rececionista/:username', async (req, res) => {
   const user = req.params.username
 
@@ -250,13 +252,41 @@ router.get('/getAllTarefas', async (req, res) => {
   res.json({tarefasVeiculosEspera, tarefasVeiculosReparacao, tarefasVeiculosProntos})
 })
 
+//Gets info about cars without a mecanic and sends it to responsavel.hbs
+router.get('/veiculosSemMecanico', async (req, res) => {
 
-// Admin
-router.get('/admin', (req, res) => {
-  res.render('admin')
+  res.json()
 })
 
-// Cliente
+// Admin ----------------------------------------------------------
+router.get('/admin/:username', (req, res) => {
+  const user = req.params.username
+  res.render('admin', {user})
+})
+
+//Add worker
+router.post('/adicionarFuncionario', async(req, res) => {
+  const nomeFunc = req.body.nome
+  const cargoFunc = req.body.cargo
+  const idadeFunc = req.body.idade
+  const telemovelFunc = req.body.telemovel
+  const moradaFunc = req.body.morada
+  const emailFunc = req.body.email
+  const rawPassword = req.body.password
+  const usernameFunc = req.body.username
+  
+  //encrypt the password
+  await bcrypt.genSalt(saltRounds, async function(err, salt) {
+    await bcrypt.hash(rawPassword, salt, async function(err, passwordFunc) {
+      const novoFunc = await adicionarFuncionario(nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, passwordFunc, usernameFunc)
+      console.log("novoFunc", novoFunc)
+    })
+  })
+
+  res.redirect('/admin/' + req.body.nomeAdmin)
+})
+
+// Cliente -----------------------------------------------------------
 router.get('/cliente/:codigo', async (req, res) => {
   const clienteEspecifico = await getClientByLink(req.params.codigo)  // ID e Link do cliente
   const orcamentos = await getdetalhesOrcamento(clienteEspecifico[0].cliente)   //   Informacao do orcamento do cliente
@@ -317,7 +347,7 @@ router.post('/orcamentoAprovado/:link', async (req, res) => {
   res.render('aproveSuccess')
 })
 
-//Dashboard
+//Dashboard ----------------------------------------------------------
 router.get('/dashboard', async (req, res) => {
 
   const tudo = await getWorkviewInfo()   //   Informacao dos veiculos

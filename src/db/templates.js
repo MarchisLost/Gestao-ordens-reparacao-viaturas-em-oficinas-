@@ -260,23 +260,19 @@ const adicionarVeiculo = async (newID, matricula, cor, marca, modelo, funcionari
 // Responsável
 // ---------------------------------------------------------------------------------------------
 
-//
-const getAllVeiculos = async () => {
+//Gets the
+
+
+// ---------------------------------------------------------------------------------------------
+// Admin
+// ---------------------------------------------------------------------------------------------
+
+const adicionarFuncionario = async (nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, passwordFunc, usernameFunc) => {
   let data = await db.query(
-    "select id_veiculo, matricula, estado, id_funcionario from veiculo", [idVeiculo, matricula, cor, marca, modelo, funcionario])
+    "INSERT INTO funcionario (id_funcionario, nome, cargo, idade, telemovel, morada, email,  password, username) VALUES (default, $1, $2, $3, $4, $5, $6, $7, $8)", [nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, passwordFunc, usernameFunc])
     .catch(e => console.error(e.stack))
 
     return data.rows[0] ? data.rows[0] : null 
-}
-
-//Gets the veiculo id and descriçao
-const getTarefasAllVeiculos = async () => {
-  let data =await db.query(
-    "select id_veiculo, tarefa.descricao from tarefa, checklist, entrada where tarefa.id_checklist = checklist.id_checklist and entrada.id_checklist = checklist.id_checklist"
-  )
-  .catch(e => console.error(e.stack))
-
-  return data.rows ? data.rows : null
 }
 
 module.exports = {
@@ -306,6 +302,5 @@ module.exports = {
   adicionarVeiculo,
   maxIDVeiculo,
   getFuncionarioByUsername,
-  getAllVeiculos,
-  getTarefasAllVeiculos
+  adicionarFuncionario
 }
