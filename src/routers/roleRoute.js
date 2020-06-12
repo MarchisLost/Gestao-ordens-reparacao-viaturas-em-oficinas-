@@ -102,16 +102,24 @@ router.post('/sairCarro/:username/:id', async (req, res) => {
 
 router.post('/terminarCarro/:username/:id', async (req, res) => {
   const username = req.params.username
-  const estado = "reparado"
+  const estado = "pronto"
   const update = await getVeiculo(req.params.id, estado)
 
   res.redirect('/workview/' + username)
 })
 
-router.post('/updateTarefa/:username/:id', async (req, res) => {
-  const idTarefa = req.params.id
+router.post('/updateTarefa/:username/:idTarefa/:idVeiculo', async (req, res) => {
+  const idTarefa = req.params.idTarefa
+  const idVeiculo = req.params.idVeiculo
   const username = req.params.username
   const update = await markTaskAsCompleted(idTarefa)
+
+  //Check if there are others tarefas not done and if not put the veiculo pronto
+  const tarefasIncompletas = await getTarefasIncompletas(idVeiculo)
+  if (tarefasIncompletas == '') {
+    const estado = "pronto"
+    const update = await getVeiculo(idVeiculo, estado)
+  }
 
   res.redirect('/workview/' + username)
 })

@@ -319,14 +319,13 @@
           for (i = 0; i < jsonData2.length; i++) {
             var text = "";
             for (j = 0; j < jsonData2[i].length; j++) {
-
               var text = "";
 
               // Criar form
               completeTarefaForm = document.createElement('form')
               completeTarefaForm.setAttribute('id', 'completeTarefaForm' + [j + 1])
               completeTarefaForm.setAttribute('method', 'post')
-              completeTarefaForm.setAttribute('action', 'http://localhost:3000/updateTarefa/' + nomeUser + "/" + jsonData2[i][j].id_tarefa)
+              completeTarefaForm.setAttribute('action', 'http://localhost:3000/updateTarefa/' + nomeUser + "/" + jsonData2[i][j].id_tarefa + "/" + jsonData2[i][j].id_veiculo)
 
               // Criar checkmark
               done = document.createElement('button')
