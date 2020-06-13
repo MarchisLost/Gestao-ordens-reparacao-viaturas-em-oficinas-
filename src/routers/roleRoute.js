@@ -8,12 +8,20 @@ const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento,
   getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
   getVeiculosByFuncionario, getTarefasVeiculo, maxIDVeiculo,
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa, getListaMecanicos,
-  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario } = require('../db/templates')
+  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin } = require('../db/templates')
 
 
-// Mecanico
+// Mecanico --------------------------------------------
 router.get('/workview/:username', async (req, res) => {
   const username = req.params.username    // Username do funcionario
+
+  res.render('workview', {username})
+})
+
+router.get('/getMatriculas/:username', async (req, res) => {
+  const tempUsername = req.params.username
+  const username = tempUsername.replace(".json", "")
+
   const veiculos = await getVeiculosByFuncionario(username)   // Veiculos pertencentes a esse funcionario
 
   let matriculasEspera = []   // Array com as matriculas dos carros em espera
@@ -28,13 +36,13 @@ router.get('/workview/:username', async (req, res) => {
       matriculasEspera.push(veiculos[i].matricula)
       veiculosEspera.push(veiculos[i].id_veiculo)
     }
-    else {
+    else if (veiculos[i].estado === 'em reparacao') {
       matriculasTrabalho.push(veiculos[i].matricula)
       veiculosReparacao.push(veiculos[i].id_veiculo)
     }
   }
 
-  res.render('workview', { matriculasEspera, matriculasTrabalho, username })
+  res.json({matriculasEspera, matriculasTrabalho, username})
 })
 
 router.get('/getTarefas/:username', async (req, res) => {
@@ -205,7 +213,8 @@ router.get('/responsavel/:username', async (req, res) => {
     }
     else if (veiculos[i].estado === 'em reparacao') {
       matriculasTrabalho.push(veiculos[i].matricula)
-    } else {
+    } 
+    else if (veiculos[i].estado === 'pronto') {
       matriculasProntas.push(veiculos[i].matricula)
     }
   }
@@ -292,6 +301,43 @@ router.post('/adicionarFuncionario', async(req, res) => {
   })
 
   res.redirect('/admin/' + req.body.nomeAdmin)
+})
+
+//Edit worker
+router.post('/editarFuncionario', async(req, res) => {
+  const nomeFunc = req.body.nome
+  const cargoFunc = req.body.cargo
+  const idadeFunc = req.body.idade
+  const telemovelFunc = req.body.telemovel
+  const moradaFunc = req.body.morada
+  const emailFunc = req.body.email
+  const rawPassword = req.body.password
+  const usernameFunc = req.body.username
+
+  
+  const data = await getLogin(usernameFunc)
+  const idFunc = data.id_funcionario
+  bcrypt.compare(rawPassword, data.password, async (err, res2) => {
+    //If true means that the passwoard wasnt changed
+    if (res2 === true) {
+      const editedFunc = await editFuncionario(nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, rawPassword, usernameFunc, idFunc)
+    } else {
+      //encrypt the new password
+      await bcrypt.genSalt(saltRounds, async function(err, salt) {
+        await bcrypt.hash(rawPassword, salt, async function(err, passwordFunc) {
+          const editedFunc = await editFuncionario(nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, passwordFunc, usernameFunc, idFunc)
+        })
+      })
+    }
+  })
+  res.redirect('/admin/' + req.body.nomeAdmin)
+})
+
+//Get all workers
+router.get('/getFuncionarios', async (req, res) => {
+  const funcionarios = await getFuncionario()
+  
+  res.json(funcionarios)
 })
 
 // Cliente -----------------------------------------------------------
