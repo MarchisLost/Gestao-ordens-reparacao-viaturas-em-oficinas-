@@ -1,7 +1,6 @@
 const express = require('express')
 const router = new express.Router()
 const bcrypt = require('bcrypt')
-const path = require('path')
 
 const {getLogin} = require('../db/templates')
 
@@ -29,7 +28,7 @@ router.post('/loginAtempt', async (req, res) => {
           res.redirect('admin/' + username)
         }
       } else {
-        res.status(404).sendFile(path.join(__dirname, '../../public', '/index.html'))
+        res.status(404).redirect('/')
       }
     })
   } 
