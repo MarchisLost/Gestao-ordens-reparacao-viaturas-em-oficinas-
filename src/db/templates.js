@@ -274,6 +274,25 @@ const adicionarFuncionario = async (nomeFunc, cargoFunc, idadeFunc, telemovelFun
     return data.rows[0] ? data.rows[0] : null 
 }
 
+//Get everything on each worker
+const getFuncionario = async () => {
+  let data = await db.query(
+    "select * from funcionario")
+    .catch(e => console.error(e.stack))
+  //console.log("getFuncionario -> data", data)
+
+    return data.rows ? data.rows : null 
+}
+
+//Edit funcionario
+const editFuncionario = async (nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, passwordFunc, usernameFunc, idFunc) => {
+  let data = await db.query(
+    "update funcionario set nome=$1, cargo=$2, idade=$3, telemovel=$4, morada=$5, email=$6, password=$7, username=$8 where id_funcionario = $9", [nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, passwordFunc, usernameFunc, idFunc])
+    .catch(e => console.error(e.stack))
+
+    return data.rows ? data.rows : null 
+}
+
 module.exports = {
   getLogin,
   getVeiculo,
@@ -301,5 +320,7 @@ module.exports = {
   adicionarVeiculo,
   maxIDVeiculo,
   getFuncionarioByUsername,
-  adicionarFuncionario
+  adicionarFuncionario,
+  getFuncionario,
+  editFuncionario
 }
