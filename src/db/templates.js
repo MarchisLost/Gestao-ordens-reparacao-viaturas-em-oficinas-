@@ -80,7 +80,6 @@ const getNomeCliente = async (id) => {
 
 const getdetalhesOrcamento = async(id) => {
   let data = await db.query(
-    //"select cliente.id_cliente, descricao, estado, nome, valor from orcamento, veiculo, cliente where orcamento.id_veiculo = veiculo.id_veiculo and orcamento.id_cliente = $1", [id]
     "select orcamento.id_cliente, orcamento.id_veiculo, valor,  descricao from orcamento where orcamento.id_cliente = $1", [id]
   )
   .catch(e => console.error(e.stack))
@@ -135,8 +134,6 @@ const createCliente = async () => {
     }
     return result;
   }
-
-  // console.log(`http://localhost:3000/cliente/${makeid(20)}`);
 }
 
 
@@ -259,8 +256,33 @@ const adicionarVeiculo = async (newID, matricula, cor, marca, modelo, funcionari
 // Responsável
 // ---------------------------------------------------------------------------------------------
 
-//Gets the
+//Gets the client id with his email
+const getClientIdByEmail = async (email) => {
+  let data = await db.query(
+    "select id_cliente from cliente where email = $1", [email])
+    .catch(e => console.error(e.stack))
 
+    return data.rows[0] ? data.rows[0] : null 
+}
+
+//Get veiculos id by plate
+const getVeiculoIdByPlate = async (matricula) => {
+  let data = await db.query(
+    "select id_veiculo from veiculo where matricula = $1", [matricula])
+    .catch(e => console.error(e.stack))
+
+    return data.rows[0] ? data.rows[0] : null 
+}
+
+//Updates orçamento
+const aprovarOrcamentoIdVeiculo = async (date, time, idCliente, idVeiculo) => {
+  let data = await db.query(
+    "update orcamento set dataaprovacao = $1, horaaprovacao = $2, aprovacao = 1 WHERE id_cliente = $3 AND id_veiculo = $4", [date, time, idCliente, idVeiculo]
+  )
+  .catch(e => console.error(e.stack))
+
+  return data.rows ? data.rows : null
+}
 
 // ---------------------------------------------------------------------------------------------
 // Admin
@@ -322,5 +344,8 @@ module.exports = {
   getFuncionarioByUsername,
   adicionarFuncionario,
   getFuncionario,
-  editFuncionario
+  editFuncionario,
+  getClientIdByEmail,
+  aprovarOrcamentoIdVeiculo,
+  getVeiculoIdByPlate
 }

@@ -31,9 +31,9 @@
                 <ul class="list-unstyled components">
                     <p>{{user}}</p>
                     <li>
-                        <a href="#">Orcamento</a>
-                        <a href="/dashboard">Dashboard</a>
+                        <a class="dropdown-toggle" data-toggle="modal" href="#exampleModal">Aceitar Orçamentos</a>
                         <a href="#">Atribuir Veiculos</a>
+                        <a href="/dashboard">Dashboard</a>
                         <a href="/rececionista/{{user}}">Rececionista</a>
                         <a href="/workview/{{user}}">Mecanico</a>
                     </li>
@@ -107,6 +107,45 @@
 
                 <h3>Veículos por Atribuir</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+
+        <!-- Modal Adicionar Funcionarios -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Aprovar Orçamento</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form1" method="post">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email Cliente</label>
+                                <input type="text" id="email" name="email" class="form-control" id="acaoInput"
+                        aria-describedby="emailHelp" placeholder="Escreva aqui..." required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Matrícula Veículo</label>
+                                <input type="text" class="form-control" name="matricula" id="matricula" aria-describedby="emailHelp"
+                                placeholder="Escreva aqui..." required>
+                            </div>
+                            <div class="form-group" hidden>
+                                <label for="exampleInputEmail1">nomeAdmin</label>
+                                <input type="text" class="form-control" name="nomeAdmin" id="nomeAdmin" aria-describedby="emailHelp"
+                                placeholder="Escreva aqui..." hidden>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="dismissalButton" class="btn btn-warning" data-dismiss="modal">Close</button>
+                        <button id="botaoAprovarOrcamento" type="submit" form="form1" class="btn btn-primary">Aprovar</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -359,8 +398,18 @@
             console.log('Couldnt get data from server')
         })
         
-        //Veiculos para o responsavel atribuir a mecánicos
-        
+        //Code when worker updates orcçamento
+        document.getElementById('botaoAprovarOrcamento').addEventListener('click', (e) => {
+            let formAprovarOrcamento = document.querySelector('#form1')
+            //Get the worker name
+            var url = window.location.href
+            var nomeAdmin = url.replace('http://localhost:3000/responsavel/','');
+
+            document.getElementById('nomeAdmin').value = nomeAdmin
+
+            formAprovarOrcamento.setAttribute('action', 'http://localhost:3000/aprovarOrcamentos')
+        })
+
     </script>
 
 </html>
