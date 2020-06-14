@@ -25,7 +25,7 @@
             <!-- Sidebar Holder -->
             <nav id="sidebar">
                 <div class="sidebar-header">
-                    <h3>Dashboard</h3>
+                    <h3>Admin</h3>
                 </div>
 
                 <ul class="list-unstyled components">
@@ -255,7 +255,7 @@
         fetch('http://localhost:3000/getFuncionarios').then(
             async (result) => {
                 funcData = await result.json()
-                console.log("funcData", funcData)
+                //console.log("funcData", funcData)
 
                 //Show all the workers
                 if (funcData.length > 0) {
@@ -263,7 +263,7 @@
                         //Create paragrafo de cada funcionario
                         let linha = document.createElement('p')
                         linha.setAttribute('id', 'funcionario' + [i + 1])
-                        linha.setAttribute('style', "display:-webkit-inline-box; color:black;")
+                        linha.setAttribute('style', "display: flex; justify-content: space-between; color:black;")
                         linha.innerHTML = funcData[i].username + ": " + funcData[i].cargo
 
                         // Criar botao editar
@@ -274,7 +274,7 @@
                         temp.setAttribute("aria-expanded", "false")
                         temp.setAttribute("data-target", "#exampleModal2")
                         temp.setAttribute("onclick", "checkID(this.id)")
-                        temp.setAttribute("style", "margin-right: 5px; margin-left: 5px; align: center")
+                        temp.setAttribute("style", "margin-right: 5px; margin-left: 5px")
                         temp.innerHTML = "Editar"
 
                         //Appends
