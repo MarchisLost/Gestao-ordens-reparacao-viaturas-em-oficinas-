@@ -8,10 +8,12 @@ const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento,
   getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
   getVeiculosByFuncionario, getTarefasVeiculo, maxIDVeiculo,
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa, getListaMecanicos,
-  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin } = require('../db/templates')
+  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin, getClientIdByEmail, aprovarOrcamentoIdVeiculo, getVeiculoIdByPlate } = require('../db/templates')
 
+//--------------------------------------------------------------------
+// Mecanico ----------------------------------------------------------
+//--------------------------------------------------------------------
 
-// Mecanico --------------------------------------------
 router.get('/workview/:username', async (req, res) => {
   const username = req.params.username    // Username do funcionario
 
@@ -30,7 +32,7 @@ router.get('/getMatriculas/:username', async (req, res) => {
   let veiculosEspera = []
   let veiculosReparacao = []
 
-  // Obter matriculas e id dos veiuclos em espera
+  // Obter matriculas e id dos veiuclos em espera ou reparaçao
   for (i = 0; i < veiculos.length; i++) {
     if (veiculos[i].estado === 'em espera') {
       matriculasEspera.push(veiculos[i].matricula)
@@ -138,14 +140,14 @@ router.post('/addTarefa/:username/:idEntrada/:textoAcao/:textoDescricao/:obrigat
   const acaoTexto = req.params.textoAcao
   const descricaoTexto = req.params.textoDescricao
 
-  var obrigatorio_valor;
+  let obrigatorio_valor;
   if(req.params.obrigatorio === true) {
     obrigatorio_valor = "sim"
   }
   else {
     obrigatorio_valor = "nao"
   }
-  var maxID = await maxIDTarefa()
+  let maxID = await maxIDTarefa()
   maxID.max = maxID.max + 1
 
   const checklistAlvo = await getIdChecklistByEntrada(entrada_id)
@@ -154,8 +156,10 @@ router.post('/addTarefa/:username/:idEntrada/:textoAcao/:textoDescricao/:obrigat
   res.redirect('/workview/' + username)
 })
 
+//---------------------------------------------------------------------
+// Rececionista--------------------------------------------------------
+//--------------------------------------------------------------------
 
-// Rececionista-------------------------------------------------
 router.get('/rececionista/:username', async (req, res) => {
   const user = req.params.username
 
@@ -192,15 +196,17 @@ router.post('/adicionarVeiculo', async (req, res) => {
   res.redirect('/rececionista/' + req.body.nomeRececionista)
 })
 
+//---------------------------------------------------------------------
+// Responsavel --------------------------------------------------------
+//--------------------------------------------------------------------
 
-// Responsavel ------------------------------------------------------
 //Renders the responsavel page and sends matriculas for later purposes
 router.get('/responsavel/:username', async (req, res) => {
   const user = req.params.username
 
   //Get all veiculos data
   const veiculos = await getListaVeiculos()
-
+  
   // Arrays com as matriculas dos carros
   let matriculasEspera = []   
   let matriculasTrabalho = [] 
@@ -252,30 +258,68 @@ router.get('/getAllTarefas', async (req, res) => {
   for (i = 0; i < veiculosEspera.length; i++) {
     tarefasVeiculosEspera.push(await getTarefasVeiculo(veiculosEspera[i]))
   }
-  //console.log('tarefasVeiculosEspera', tarefasVeiculosEspera)
 
   //Get tarefas from reparacao
   for (i = 0; i < veiculosReparacao.length; i++) {
     tarefasVeiculosReparacao.push(await getTarefasVeiculo(veiculosReparacao[i]))
   }
-  //console.log("tarefasVeiculosReparacao", tarefasVeiculosReparacao)
 
   //Get tarefas from prontos
   for (i = 0; i < veiculosProntos.length; i++) {
     tarefasVeiculosProntos.push(await getTarefasVeiculo(veiculosProntos[i]))
   }
-  //console.log("tarefasVeiculosProntos", tarefasVeiculosProntos)
 
   res.json({tarefasVeiculosEspera, tarefasVeiculosReparacao, tarefasVeiculosProntos})
 })
 
 //Gets info about cars without a mecanic and sends it to responsavel.hbs
-router.get('/veiculosSemMecanico', async (req, res) => {
+router.post('/aprovarOrcamentos', async (req, res) => {
 
-  res.json()
+  const clientEmail = req.body.email
+  const matriculaCarro = req.body.matricula
+
+  //Add 0 to the time when needed
+  function addZero(i) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
+
+  let currentTime;
+
+  //Get Time
+  function getTime() {
+    let d = new Date();
+    let h = addZero(d.getHours());
+    let m = addZero(d.getMinutes());
+    let s = addZero(d.getSeconds());
+    return  h + ":" + m + ":" + s;
+  }
+
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  let yyyy = today.getFullYear();
+  
+  today = yyyy + '-' + mm + '-' + dd;
+  currentTime = getTime()
+
+  let idCliente = await getClientIdByEmail(clientEmail)
+  idCliente = idCliente.id_cliente
+
+  let idVeiculo = await getVeiculoIdByPlate(matriculaCarro)
+  idVeiculo = idVeiculo.id_veiculo
+
+  const submitDetails = await aprovarOrcamentoIdVeiculo(today, currentTime, idCliente, idVeiculo)
+
+  res.redirect('/responsavel/' + req.body.nomeAdmin)
 })
 
-// Admin ----------------------------------------------------------
+//---------------------------------------------------------------------
+// Admin -------------------------------------------------------------
+//---------------------------------------------------------------------
+
 router.get('/admin/:username', (req, res) => {
   const user = req.params.username
   res.render('admin', {user})
@@ -340,7 +384,10 @@ router.get('/getFuncionarios', async (req, res) => {
   res.json(funcionarios)
 })
 
+//--------------------------------------------------------------------
 // Cliente -----------------------------------------------------------
+//--------------------------------------------------------------------
+
 router.get('/cliente/:codigo', async (req, res) => {
   const clienteEspecifico = await getClientByLink(req.params.codigo)  // ID e Link do cliente
   const orcamentos = await getdetalhesOrcamento(clienteEspecifico[0].cliente)   //   Informacao do orcamento do cliente
@@ -367,7 +414,7 @@ router.post('/orcamentoAprovado/:link', async (req, res) => {
   
   const urlCode = req.params.link
 
-  // Get Time
+  //Add 0 to the time when needed
   function addZero(i) {
     if (i < 10) {
       i = "0" + i;
@@ -377,23 +424,24 @@ router.post('/orcamentoAprovado/:link', async (req, res) => {
 
   let currentTime;
 
+  //Get Time
   function getTime() {
-    var d = new Date();
-    var h = addZero(d.getHours());
-    var m = addZero(d.getMinutes());
-    var s = addZero(d.getSeconds());
+    let d = new Date();
+    let h = addZero(d.getHours());
+    let m = addZero(d.getMinutes());
+    let s = addZero(d.getSeconds());
     return  h + ":" + m + ":" + s;
   }
 
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, '0');
-  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  var yyyy = today.getFullYear();
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  let yyyy = today.getFullYear();
   
   today = yyyy + '-' + mm + '-' + dd;
   currentTime = getTime()
 
-  var idCliente = await getClientByLink(urlCode)
+  let idCliente = await getClientByLink(urlCode)
   idCliente = idCliente[0].cliente
 
   const submitDetails = await aprovarOrcamento(today, currentTime, idCliente)
@@ -406,11 +454,6 @@ router.get('/dashboard', async (req, res) => {
 
   const tudo = await getWorkviewInfo()   //   Informacao dos veiculos
   const tarefas = await getTarefasCompletas()
-  // console.log(tarefas, tudo)
-  // console.log("Comprimento: ", tarefas.length)
-
-
-  // console.log("Numero de tarefas para veiculo 1: ", tarefas.filter(tarefa => tarefa.id_veiculo === 1).length)
 
   let numeroTarefasPorID = []
 
@@ -428,8 +471,6 @@ router.get('/dashboard', async (req, res) => {
     numeroTarefas.push(tarefas.filter(tarefa => tarefa.id_veiculo === idVeiculos[i]).length)
     tarefasCompletas.push(tarefas.filter(tarefa => tarefa.id_veiculo === idVeiculos[i] && tarefa.completa).length)
   }
-
-  // console.log(numeroTarefas, tarefasCompletas)
 
   let progresso = []
   for (i = 0; i < idVeiculos.length; i++) {
