@@ -190,10 +190,10 @@ const getIdChecklistByEntrada = async (idEntrada) => {
     return data.rows[0] ? data.rows[0] : null 
 }
 
-const adicionarTarefa = async (acao, descricao, obrigatorio, idChecklist, newID) => {
+const adicionarTarefa = async (acao, descricao, obrigatorio, idChecklist) => {
   let data = await db.query(
-    "INSERT INTO tarefa (acao, descricao, obrigatorio, id_checklist, completa, id_tarefa) VALUES ($1, $2, $3, $4, 0, $5)", [acao, descricao, obrigatorio, idChecklist, newID])
-    .catch(e => console.error(e.stack))
+    "INSERT INTO tarefa (acao, descricao, obrigatorio, id_checklist, completa, id_tarefa) VALUES ($1, $2, $3, $4, 0, default)", [acao, descricao, obrigatorio, idChecklist])
+    .catch(e => console.error(e))
 
     return data.rows[0] ? data.rows[0] : null 
 }
@@ -315,6 +315,16 @@ const editFuncionario = async (nomeFunc, cargoFunc, idadeFunc, telemovelFunc, mo
     return data.rows ? data.rows : null 
 }
 
+//Insert new Checklist
+const newChecklist = async (descricao) => {
+  let data = await db.query(
+    "INSERT INTO checklist (id_checklist, descricao) VALUES (default, $1) RETURNING id_checklist", [descricao]
+  )
+  .catch(e => console.error(e.stack))
+
+  return data
+}
+
 module.exports = {
   getLogin,
   getVeiculo,
@@ -347,5 +357,6 @@ module.exports = {
   editFuncionario,
   getClientIdByEmail,
   aprovarOrcamentoIdVeiculo,
-  getVeiculoIdByPlate
+  getVeiculoIdByPlate,
+  newChecklist
 }

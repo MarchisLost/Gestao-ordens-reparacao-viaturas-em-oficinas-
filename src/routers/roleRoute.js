@@ -8,7 +8,7 @@ const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento,
   getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
   getVeiculosByFuncionario, getTarefasVeiculo, maxIDVeiculo,
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa, getListaMecanicos,
-  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin, getClientIdByEmail, aprovarOrcamentoIdVeiculo, getVeiculoIdByPlate } = require('../db/templates')
+  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin, getClientIdByEmail, aprovarOrcamentoIdVeiculo, getVeiculoIdByPlate, newChecklist } = require('../db/templates')
 
 //--------------------------------------------------------------------
 // Mecanico ----------------------------------------------------------
@@ -314,6 +314,30 @@ router.post('/aprovarOrcamentos', async (req, res) => {
   const submitDetails = await aprovarOrcamentoIdVeiculo(today, currentTime, idCliente, idVeiculo)
 
   res.redirect('/responsavel/' + req.body.nomeAdmin)
+})
+
+//Gets info of new checklist
+router.post('/addChecklist', async (req, res) => {
+
+  const descricaoChecklist = req.body.descricaoChecklist
+  const accao = req.body.accao
+  const descricao = req.body.descricao
+  const rawObrigatoriedade = req.body.obrigatoriedade
+  //Check if obrigatoriedade is yes or no
+  if (rawObrigatoriedade === 'on') {
+    obrigatoriedade = 'sim'
+  } else {
+    obrigatoriedade = 'nao'
+  }
+
+  //Insert checklist
+  let newCl = await newChecklist(descricaoChecklist)
+  let id_checklist = newCl.rows[0].id_checklist
+  
+  //Insert tarefa
+  let newTarefa = await adicionarTarefa(accao, descricao, obrigatoriedade, id_checklist)
+
+  res.redirect('/admin/' + req.body.nomeAdmin3)
 })
 
 //---------------------------------------------------------------------

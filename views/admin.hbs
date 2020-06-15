@@ -31,7 +31,7 @@
                 <ul class="list-unstyled components">
                     <p>{{user}}</p>
                     <li>
-                        <a href="#">Definir Checklist</a>
+                        <a class="dropdown-toggle" data-toggle="modal" href="#exampleModal3">Criar Checklist</a>
                         <a class="dropdown-toggle" data-toggle="modal" href="#exampleModal" >Adicionar Funcionários</a>
                         <a href="/dashboard">Dashboard</a>
                         <a href="/responsavel/{{user}}">Responsável</a>
@@ -44,8 +44,6 @@
                     </li>
                 </ul>
             </nav>
-
-            
 
             <!-- Page Content Holder -->
             <div id="content">
@@ -64,7 +62,7 @@
                     </div>
                 </nav>
                 
-                <h2>Lista Funcionários</h2>
+                <h2 class="text-center">Lista Funcionários</h2>
                 <div class="container">
                     <div class="row">
 
@@ -75,11 +73,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="line"></div>
-
-                <h2>Lorem Ipsum Dolor</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
         </div>
 
@@ -92,6 +85,53 @@
 
         
     </body>
+
+    <!-- Modal Adicionar Tarefas -->
+    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3"
+    aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel3">Adicionar Tarefas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="form3" method="post">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Descrição Checklist</label>
+                            <input type="text" id="descricaoChecklist" name="descricaoChecklist" class="form-control" id="acaoInput"
+                    aria-describedby="emailHelp" placeholder="Escreva aqui..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Acção</label>
+                            <input type="text" class="form-control" name="accao" id="accao" aria-describedby="emailHelp"
+                            placeholder="Escreva aqui..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Descrição</label>
+                            <input type="text" class="form-control" name="descricao" id="descricao" aria-describedby="emailHelp"
+                            placeholder="Escreva aqui..." required>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="obrigatoriedade" class="form-check-input" id="checkBoxObrigatorio">
+                            <label class="form-check-label" for="exampleCheck1">Obrigatorio</label>
+                        </div>
+                        <div class="form-group" hidden>
+                            <label for="exampleInputEmail1">nomeAdmin</label>
+                            <input type="text" class="form-control" name="nomeAdmin3" id="nomeAdmin3" aria-describedby="emailHelp"
+                            placeholder="Escreva aqui..." hidden>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="dismissalButton" class="btn btn-warning" data-dismiss="modal">Close</button>
+                    <button id="botaoAdicionarTarefa" type="submit" form="form3" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Adicionar Funcionarios -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -307,14 +347,23 @@
         //Detect when edit worker is pressed
         document.getElementById('botaoEditarFuncionario').addEventListener('click', async (e) => {
             let formEditFuncinario = document.querySelector('#form2')
-            //Get the worker name
-            var url = window.location.href
-            var nomeAdmin = url.replace('http://localhost:3000/admin/','');
-
+            //Get the worker name to send it
+            let url = window.location.href
+            let nomeAdmin = url.replace('http://localhost:3000/admin/','')
             document.getElementById('nomeAdmin2').value = nomeAdmin
             
             formEditFuncinario.setAttribute('action', 'http://localhost:3000/editarFuncionario')
         })
+
+        document.getElementById('botaoAdicionarTarefa').addEventListener('click', async (e) => {
+              let formAddTarefa = document.querySelector('#form3')
+              //Get the worker name to send it
+              let url = window.location.href
+              let nomeAdmin = url.replace('http://localhost:3000/admin/','');
+              document.getElementById('nomeAdmin3').value = nomeAdmin
+              
+              formAddTarefa.setAttribute('action', 'http://localhost:3000/addChecklist')
+            })
     </script>
 
 </html>
