@@ -54,15 +54,13 @@
         <div class="col">
 
           <div id="divPrincipal" class="card card-body">
-
           </div>
 
           <br>
 
-          <button class="btn btn-dark" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"> Adicionar
-              Veiculo</i>
+          <button class="btn btn-dark" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"> Nova Entrada</i>
           </button>
-          <button class="btn btn-warning" id="atualizarBotao">Atualizar Pagina</button>
+          <button class="btn btn-primary" id="atualizarBotao">Atualizar Pagina</button>
 
         </div>
       </div>
@@ -74,7 +72,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Adicionar Veiculo</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Nova Entrada</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -127,26 +125,30 @@
     //Fetch veiculos to show on the main screen
     fetch('http://localhost:3000/getVeiculos/').then(
       async (result) => {
-
         jsonData = await result.json();
-
-        // console.log(jsonData)
 
         if (jsonData.length > 0) {
           for (i = 0; i < jsonData.length; i++) {
             // Designacao do veiculo
             var designacaoVeiculo = document.createElement('p')
             designacaoVeiculo.setAttribute('id', 'idVeiculo' + jsonData[i].id_veiculo)
-            designacaoVeiculo.innerHTML = jsonData[i].matricula
+            designacaoVeiculo.innerHTML = jsonData[i].matricula + ": "
 
             // Botao Consultar estado
             botaoConsultar = document.createElement('button')
             botaoConsultar.setAttribute("id", "botaoConsultar" + jsonData[i].id_veiculo)
-            botaoConsultar.setAttribute("class", "btn btn-primary")
+            if(jsonData[i].estado === 'em espera') {
+              botaoConsultar.setAttribute("class", "btn btn-info")
+            } else if (jsonData[i].estado === 'em reparacao') {
+              botaoConsultar.setAttribute("class", "btn btn-warning")
+            } else {
+              botaoConsultar.setAttribute("class", "btn btn-success")
+            }
+            
             botaoConsultar.setAttribute("data-toggle", "collapse")
             botaoConsultar.setAttribute("data-target", "#detalhesReparacao" + jsonData[i].id_veiculo)
             botaoConsultar.setAttribute("style", "margin-left: 7px;")
-            botaoConsultar.innerHTML = "Consultar Estado"
+            botaoConsultar.innerHTML = "Estado: " + jsonData[i].estado
 
             designacaoVeiculo.appendChild(botaoConsultar)
 
