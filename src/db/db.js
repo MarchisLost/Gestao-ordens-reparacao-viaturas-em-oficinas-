@@ -1,6 +1,6 @@
 //const { Sequelize } = require('sequelize');
 const Pool = require('pg').Pool
-require('dotenv').config();
+require('dotenv').config()
 
 //passing the necessary information for the postgresql bd
 module.exports =  new Pool({
