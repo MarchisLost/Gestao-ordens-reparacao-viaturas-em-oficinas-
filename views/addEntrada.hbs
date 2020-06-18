@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Entrada</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </head>
+  <body>    
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center">Adicionar Entrada</h1>
+        </div>
+      </div>
+    </div>
+
+    <form id="formGlobal" method="post" action="http://localhost:3000/addEntrada">
+      <div class="card text-center">
+        <div class="card-header">
+          <h4>Adicionar Cliente</h4> 
+        </div>
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <div class="input-group-append">
+              <label class="input-group-text" for="adicionarCliente">Emails</label>
+            </div>
+            <select class="custom-select" id="adicionarCliente" name="escolhaCliente">
+              <option value="">Escolha...</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExampleCliente" aria-expanded="false" aria-controls="collapseExampleCliente"> Novo Cliente
+          </button>
+          <div class="collapse" id="collapseExampleCliente">
+            <div class="card card-body">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Nome</label>
+                <input type="text" id="nome" name="nome" class="form-control" id="acaoInput"
+                  aria-describedby="emailHelp" placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Número Contribuinte</label>
+                <input type="text" class="form-control" name="nrContribuinte" id="nrContribuinte" aria-describedby="emailHelp"
+                  placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Idade</label>
+                <input type="text" class="form-control" name="idade" id="idade" aria-describedby="emailHelp"
+                  placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Morada</label>
+                <input type="text" class="form-control" name="morada" id="morada" aria-describedby="emailHelp"
+                  placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Código-Postal</label>
+                <input type="text" class="form-control" name="codigoPostal" id="codigoPostal" aria-describedby="emailHelp"
+                  placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Número Telemóvel</label>
+                <input type="text" class="form-control" name="telemovel" id="telemovel" aria-describedby="emailHelp"
+                  placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Email</label>
+                <input type="text" class="form-control" name="email" id="email" aria-describedby="emailHelp"
+                  placeholder="Escreva aqui...">
+              </div>
+            </div>
+            <div class="card card-footer">
+              <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#collapseExampleCliente" aria-expanded="true" aria-controls="collapseExampleCliente"> Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card text-center">
+        <div class="card-header">
+          <h4>Adicionar Veículo</h4> 
+        </div>
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <div class="input-group-append">
+              <label class="input-group-text" for="adicionarVeiculo">Matrículas <label>
+            </div>
+            <select class="custom-select" id="adicionarVeiculo" name="escolhaVeiculo">
+              <option value="">Escolha...</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExampleVeiculo" aria-expanded="false" aria-controls="collapseExampleVeiculo"> Novo Veículo
+          </button>
+          <div class="collapse" id="collapseExampleVeiculo">
+            <div class="card card-body">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Matricula</label>
+                <input type="text" id="matricula" name="matricula" class="form-control" id="acaoInput" aria-describedby="emailHelp" placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Cor</label>
+                <input type="text" class="form-control" name="cor" id="cor" aria-describedby="emailHelp"
+                  placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Marca</label>
+                <input type="text" class="form-control" name="marca" id="marca" aria-describedby="emailHelp"
+                  placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Modelo</label>
+                <input type="text" class="form-control" name="modelo" id="modelo" aria-describedby="emailHelp"
+                  placeholder="Escreva aqui...">
+              </div>
+            </div>
+            <div class="card card-footer">
+              <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#collapseExampleVeiculo" aria-expanded="true" aria-controls="collapseExampleVeiculo"> Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card text-center">
+        <div class="card-header">
+          <h4>Adicionar Tarefa</h4> 
+        </div>
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <div class="input-group-append">
+              <label class="input-group-text" for="adicionarTarefa">CheckLists</label>
+            </div>
+            <select class="custom-select" id="adicionarTarefa" name="escolhaTarefa">
+              <option value="">Escolha...</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExampleTarefa" aria-expanded="false" aria-controls="collapseExampleTarefa"> Nova Tarefa
+          </button>
+          <div class="collapse" id="collapseExampleTarefa">
+            <div class="card card-body">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Descrição Checklist</label>
+                <input type="text" id="descricaoChecklist" name="descricaoChecklist" class="form-control" id="acaoInput" aria-describedby="emailHelp" placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Acção</label>
+                <input type="text" class="form-control" name="accao" id="accao" aria-describedby="emailHelp" placeholder="Escreva aqui...">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Descrição</label>
+                <input type="text" class="form-control" name="descricao" id="descricao" aria-describedby="emailHelp" placeholder="Escreva aqui...">
+              </div>
+              <div class="form-check">
+                <input type="checkbox" name="obrigatoriedade" class="form-check-input" id="checkBoxObrigatorio">
+                <label class="form-check-label" for="exampleCheck1">Obrigatorio</label>
+              </div>
+            </div>
+            <div class="card card-footer">
+              <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#collapseExampleTarefa" aria-expanded="true" aria-controls="collapseExampleTarefa"> Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card text-center">
+        <div class="card-header">
+          <h4>Selecionar Mecánico</h4> 
+        </div>
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <div class="input-group-append">
+              <label class="input-group-text" for="adicionarMecanico">Nomes</label>
+            </div>
+            <select class="custom-select" id="adicionarMecanico" name="mecanico">
+              <option value="">Escolha...</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" hidden>
+        <input type="text" class="form-control" name="nomeRececionista" id="nomeRececionista" aria-describedby="emailHelp" value="{{user}}" hidden>
+      </div>
+    </form>
+    <div class="card text-center">
+      <div class="card-body">
+        <button type="submit" class="btn btn-success" id="inserirEntrada" form="formGlobal">Inserir Entrada
+        </button>
+        <button type="button" class="btn btn-warning" onclick="location.href='http://localhost:3000/rececionista/{{user}}'">Cancelar Entrada
+        </button>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    let clienteSelecionado
+    let veiculoSelecionado
+    let tarefaSelecionado
+    let mecanicoSelecionado
+    //Fetch mecanicos to show on the modal
+    fetch('http://localhost:3000/getClientes').then(
+      async (result) => {
+
+        jsonData = await result.json();
+        //console.log(jsonData)
+
+        let select = document.getElementById("adicionarCliente"), arr = jsonData
+
+        for (let i = 0; i < arr.length; i++) {
+          let option = document.createElement("OPTION"),
+          txt = document.createTextNode(arr[i].email);
+          option.appendChild(txt);
+          option.setAttribute("id", "botaoAddClient" + [i + 1])
+          option.setAttribute("value", arr[i].email);
+          select.insertBefore(option, select.lastChild);
+        }
+      }
+    )
+
+    //Fetch mecanicos to show on the modal
+    fetch('http://localhost:3000/getMecanicos/').then(
+      async (result) => {
+        jsonData2 = await result.json();
+        //console.log('mec:', jsonData2)
+
+        let select = document.getElementById("adicionarMecanico"), arr = jsonData2
+
+        for (let i = 0; i < arr.length; i++) {
+          let option = document.createElement("OPTION"),
+          txt = document.createTextNode(arr[i].username);
+          option.appendChild(txt);
+          option.setAttribute("value", arr[i].username);
+          select.insertBefore(option, select.lastChild);
+        }
+      }
+    )
+
+    //Fetch veiculos to show on the modal
+    fetch('http://localhost:3000/getVeiculos').then(
+      async (result) => {
+
+        jsonData1 = await result.json();
+        //console.log(jsonData1)
+
+        let select = document.getElementById("adicionarVeiculo"), arr = jsonData1
+
+        for (let i = 0; i < arr.length; i++) {
+          let option = document.createElement("OPTION"),
+          txt = document.createTextNode(arr[i].matricula);
+          option.appendChild(txt);
+          option.setAttribute("value", arr[i].matricula);
+          select.insertBefore(option, select.lastChild);
+        }
+      }
+    )
+
+    //Fetch tarefas to show on the modal
+    fetch('http://localhost:3000/getChecklists').then(
+      async (result) => {
+
+        jsonData3 = await result.json();
+        //console.log(jsonData3)
+
+        let select = document.getElementById("adicionarTarefa"), arr = jsonData3
+
+        for (let i = 0; i < arr.length; i++) {
+          let option = document.createElement("OPTION"),
+          txt = document.createTextNode(arr[i].descricao);
+          option.appendChild(txt);
+          option.setAttribute("value", arr[i].descricao);
+          select.insertBefore(option, select.lastChild);
+        }
+      }
+    )
+
+{{!--     //Add required
+    let btn = document.getElementsByClassName('btn btn-primary')
+    for(i = 0; i < btn.length; i++) {
+      btn[i].addEventListener('click', (e) => {
+        console.log("e", e)
+      
+      })
+    } --}}
+    
+
+    {{!-- //Remove required
+    document.getElementsByClassName('btn btn-dark').addEventListener('click', (e) => {
+      document.getElementByClassName('form-control').required = false
+    }) --}}
+  </script>
+</html>

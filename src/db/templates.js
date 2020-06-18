@@ -123,17 +123,13 @@ const aprovarOrcamento = async (date, time, id) => {
   return data.rows ? data.rows : null
 }
 
-const createCliente = async () => {
-  //Function to randomly generate client code
-  function makeid(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
+const addCliente = async (nomeCliente, NCCliente, idadeCliente, moradaCliente, CPCliente, telCliente, emailCliente) => {
+  let data = await db.query(
+    "INSERT INTO cliente (id_cliente, nome, nr_contribuinte, idade, morada, codigopostal, nrtelefone, email) VALUES (default, $1, $2, $3, $4, $5, $6, $7) RETURNING id_cliente", [nomeCliente, NCCliente, idadeCliente, moradaCliente, CPCliente, telCliente, emailCliente])
+  .catch(e => console.error(e.stack))
+
+  return data.rows ? data.rows : null
+  
 }
 
 
@@ -222,7 +218,7 @@ const getListaVeiculos = async () => {
 
 const getListaMecanicos = async () => {
   let data = await db.query(
-    "select username from funcionario where cargo = 'mecanico'")
+    "select id_funcionario, username from funcionario where cargo = 'mecanico'")
     .catch(e => console.error(e.stack))
 
     return data.rows
@@ -244,14 +240,40 @@ const getFuncionarioByUsername = async (username) => {
     return data.rows[0] ? data.rows[0] : null 
 }
 
-const adicionarVeiculo = async (newID, matricula, cor, marca, modelo, funcionario) => {
+const adicionarVeiculo = async (matricula, cor, marca, modelo, funcionario) => {
   let data = await db.query(
-    "INSERT INTO veiculo (id_veiculo, matricula, cor, marca, modelo, estado,  id_funcionario) VALUES ($1, $2, $3, $4, $5, 'em espera', $6)", [newID, matricula, cor, marca, modelo, funcionario])
+    "INSERT INTO veiculo (id_veiculo, matricula, cor, marca, modelo, estado,  id_funcionario) VALUES (default, $1, $2, $3, $4, 'em espera', $5) RETURNING id_veiculo", [matricula, cor, marca, modelo, funcionario])
     .catch(e => console.error(e.stack))
 
     return data.rows[0] ? data.rows[0] : null 
 }
 
+//Get all the clients
+const getClientes = async () => {
+  let data = await db.query(
+    "select * from cliente")
+    .catch(e => console.error(e.stack))
+
+    return data.rows ? data.rows : null 
+}
+
+//Get all the clients
+const getChecklists = async () => {
+  let data = await db.query(
+    "select * from checklist")
+    .catch(e => console.error(e.stack))
+
+    return data.rows ? data.rows : null 
+}
+
+//Create new Entrada
+const addEntrada = async (dataEntrada, idVeiculo, idChecklist, idCliente, link) => {
+  let data = await db.query(
+    "INSERT INTO entrada (id_entrada, data_entrada, id_veiculo, id_checklist, cliente, link) VALUES (default, $1, $2, $3, $4, $5)", [dataEntrada, idVeiculo, idChecklist, idCliente, link])
+  .catch(e => console.error(e.stack))
+
+  return data.rows[0] ? data.rows[0] : null 
+}
 // ---------------------------------------------------------------------------------------------
 // Responsável
 // ---------------------------------------------------------------------------------------------
@@ -301,7 +323,6 @@ const getFuncionario = async () => {
   let data = await db.query(
     "select * from funcionario")
     .catch(e => console.error(e.stack))
-  //console.log("getFuncionario -> data", data)
 
     return data.rows ? data.rows : null 
 }
@@ -322,7 +343,7 @@ const newChecklist = async (descricao) => {
   )
   .catch(e => console.error(e.stack))
 
-  return data
+  return data.rows[0] ? data.rows[0] : null
 }
 
 module.exports = {
@@ -358,5 +379,9 @@ module.exports = {
   getClientIdByEmail,
   aprovarOrcamentoIdVeiculo,
   getVeiculoIdByPlate,
-  newChecklist
+  newChecklist,
+  getClientes,
+  getChecklists,
+  addEntrada,
+  addCliente
 }

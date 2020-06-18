@@ -52,13 +52,12 @@
     <div class="container">
       <div class="row">
         <div class="col">
-
           <div id="divPrincipal" class="card card-body">
           </div>
 
           <br>
 
-          <button class="btn btn-dark" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"> Nova Entrada</i>
+          <button class="btn btn-dark" type="button" onclick="location.href='http://localhost:3000/adicionarEntrada/{{user}}'"><i class="fa fa-plus"> Nova Entrada</i>
           </button>
           <button class="btn btn-primary" id="atualizarBotao">Atualizar Pagina</button>
 
@@ -119,8 +118,7 @@
       </div>
     </div>
   </body>
-
-
+  
   <script>
     //Fetch veiculos to show on the main screen
     fetch('http://localhost:3000/getVeiculos/').then(
@@ -130,7 +128,7 @@
         if (jsonData.length > 0) {
           for (i = 0; i < jsonData.length; i++) {
             // Designacao do veiculo
-            var designacaoVeiculo = document.createElement('p')
+            let designacaoVeiculo = document.createElement('p')
             designacaoVeiculo.setAttribute('id', 'idVeiculo' + jsonData[i].id_veiculo)
             designacaoVeiculo.innerHTML = jsonData[i].matricula + ": "
 
@@ -153,24 +151,24 @@
             designacaoVeiculo.appendChild(botaoConsultar)
 
             // Div Detalhes (Principal)
-            var divDetalhes = document.createElement('div')
+            let divDetalhes = document.createElement('div')
             divDetalhes.setAttribute('class', 'collapse multi-collapse')
             divDetalhes.setAttribute('id', 'detalhesReparacao' + jsonData[i].id_veiculo)
 
             // Div Detalhes (body)
-            var divBody = document.createElement('div')
+            let divBody = document.createElement('div')
             divBody.setAttribute('class', 'card card-body')
 
             // Div Estado
-            var divEstado = document.createElement('div')
+            let divEstado = document.createElement('div')
 
             // Paragrafo Estado
-            var estadoVeiculo = document.createElement('p')
+            let estadoVeiculo = document.createElement('p')
             estadoVeiculo.setAttribute('style', 'font-style: italic;')
             estadoVeiculo.innerHTML = "Estado: " + jsonData[i].estado
 
             // Detalhes Veiculo (Div)
-            var detalhesVeiculoDiv = document.createElement('div')
+            let detalhesVeiculoDiv = document.createElement('div')
 
             divEstado.appendChild(estadoVeiculo)
 
@@ -183,7 +181,7 @@
             divDetalhes.appendChild(linebreak);
 
             // Main
-            var mainDiv = document.getElementById('divPrincipal')
+            let mainDiv = document.getElementById('divPrincipal')
 
             mainDiv.appendChild(designacaoVeiculo)
             mainDiv.appendChild(divDetalhes)
@@ -193,7 +191,7 @@
 
         // Botao Procurar
         document.getElementById('botaoProcurar').addEventListener('click', (e) => {
-          var formProcurar = document.querySelector('#formProcura')
+          let formProcurar = document.querySelector('#formProcura')
           let veiculoProcurado;
 
           if (document.getElementById('procurarVeiculo').value !== "") {
@@ -213,7 +211,7 @@
             // -------------------------
 
             // Designacao do veiculo
-            var designacaoVeiculo = document.createElement('p')
+            let designacaoVeiculo = document.createElement('p')
             designacaoVeiculo.setAttribute('id', 'idVeiculo' + veiculoProcurado[0].id_veiculo)
             designacaoVeiculo.innerHTML = veiculoProcurado[0].matricula
 
@@ -229,24 +227,24 @@
             designacaoVeiculo.appendChild(botaoConsultar)
 
             // Div Detalhes (Principal)
-            var divDetalhes = document.createElement('div')
+            let divDetalhes = document.createElement('div')
             divDetalhes.setAttribute('class', 'collapse multi-collapse')
             divDetalhes.setAttribute('id', 'detalhesReparacao' + veiculoProcurado[0].id_veiculo)
 
             // Div Detalhes (body)
-            var divBody = document.createElement('div')
+            let divBody = document.createElement('div')
             divBody.setAttribute('class', 'card card-body')
 
             // Div Estado
-            var divEstado = document.createElement('div')
+            let divEstado = document.createElement('div')
 
             // Paragrafo Estado
-            var estadoVeiculo = document.createElement('p')
+            let estadoVeiculo = document.createElement('p')
             estadoVeiculo.setAttribute('style', 'font-style: italic;')
             estadoVeiculo.innerHTML = "Estado: " + veiculoProcurado[0].estado
 
             // Detalhes Veiculo (Div)
-            var detalhesVeiculoDiv = document.createElement('div')
+            let detalhesVeiculoDiv = document.createElement('div')
 
             divEstado.appendChild(estadoVeiculo)
 
@@ -259,7 +257,7 @@
             divDetalhes.appendChild(linebreak);
 
             // Main
-            var mainDiv = document.getElementById('divPrincipal')
+            let mainDiv = document.getElementById('divPrincipal')
 
             mainDiv.appendChild(designacaoVeiculo)
             mainDiv.appendChild(divDetalhes)
@@ -286,22 +284,7 @@
           select.insertBefore(option, select.lastChild);
         }
       }
-    );
-
-    document.getElementById('botaoAdicionarVeiculo').addEventListener('click', (e) => {
-      var formAddVeiculo = document.querySelector('#form1')
-      var url = window.location.href
-      var nomeRececionista = url.replace('http://localhost:3000/rececionista/','');
-
-      document.getElementById('nomeRececionista').value = nomeRececionista
-
-      formAddVeiculo.setAttribute('action', 'http://localhost:3000/adicionarVeiculo/')
-    })
-
-    document.getElementById('atualizarBotao').addEventListener('click', (e) => {
-      window.location.reload(true);
-    })
-
+    )
   </script>
 
 </html>

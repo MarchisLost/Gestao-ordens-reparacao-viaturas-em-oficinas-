@@ -1,14 +1,15 @@
 const express = require('express')
 const router = new express.Router()
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const bcrypt = require('bcrypt')
+require('dotenv').config()
+const saltRounds = 10
 
 const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, 
   getProblemas, getListaTarefas, getFuncionarioByUsername,
-  getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
+  getClientByLink, getVeiculoById, getNomeCliente, aproletOrcamento,
   getVeiculosByFuncionario, getTarefasVeiculo, maxIDVeiculo,
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa, getListaMecanicos,
-  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin, getClientIdByEmail, aprovarOrcamentoIdVeiculo, getVeiculoIdByPlate, newChecklist } = require('../db/templates')
+  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin, getClientIdByEmail, aproletOrcamentoIdVeiculo, getVeiculoIdByPlate, newChecklist, getClientes, getChecklists, addEntrada, addCliente } = require('../db/templates')
 
 //--------------------------------------------------------------------
 // Mecanico ----------------------------------------------------------
@@ -178,6 +179,18 @@ router.get('/getMecanicos', async (req, res) => {
   res.json(mecanicos)
 })
 
+router.get('/getClientes', async (req, res) => {
+  const clients = await getClientes()
+
+  res.json(clients)
+})
+
+router.get('/getChecklists', async (req, res) => {
+  const checklist = await getChecklists()
+
+  res.json(checklist)
+})
+
 router.post('/adicionarVeiculo', async (req, res) => {
 
   const matriculaVeiculo = req.body.matricula
@@ -193,6 +206,123 @@ router.post('/adicionarVeiculo', async (req, res) => {
 
   const novoVeiculo = await adicionarVeiculo(idVeiculo.max, matriculaVeiculo, corVeiculo, marcaVeiculo, modeloVeiculo, idMecanico.id_funcionario)
 
+  res.redirect('/rececionista/' + req.body.nomeRececionista)
+})
+
+/* router.get('/getVeiculosCliente/:id', async (req, res) => {
+  const idCliente = req.params.id
+  console.log("idCliente", idCliente)
+  const veiculos = await getListaVeiculos()
+  console.log("veiculos", veiculos)
+
+  res.json(veiculos)
+}) */
+
+//Add new entrada view page
+router.get('/adicionarEntrada/:username', async (req, res) => {
+  const user = req.params.username
+  
+  res.render('addEntrada', {user})
+})
+
+router.post('/addEntrada', async (req, res) => {
+  let data = req.body
+  //console.log("data", data)
+  //Insert cliente and/or get clienteId
+  let idCliente
+  if (data.escolhaCliente != "") {
+    let clientEmail = data.escolhaCliente
+    idCliente = await getClientIdByEmail(clientEmail)
+    idCliente = idCliente.id_cliente
+    
+  } else {
+    let nomeCliente = data.nome
+    let NCCliente = data.nrContribuinte
+    let idadeCliente = data.idade
+    let moradaCliente = data.morada
+    let CPCliente = data.codigoPostal
+    let telCliente = data.telemovel
+    let emailCliente = data.email
+    let newCliente = await addCliente(nomeCliente, NCCliente, idadeCliente, moradaCliente, CPCliente, telCliente, emailCliente)
+    idCliente = newCliente[0].id_cliente
+  }
+
+  //Get mecánico id
+  let mecLista = await getListaMecanicos()
+  let idMecanico
+  for (let i = 0; i < mecLista.length; i++) {
+    if (mecLista[i].username === req.body.mecanico) {
+      idMecanico = mecLista[i].id_funcionario
+    }
+  }
+
+  //Insert veiculo and/or get veiculoId
+  let idVeiculo
+  if (data.escolhaVeiculo != "") {
+    let veiculoMatricula = data.escolhaVeiculo
+    let listaVeiculos = await getListaVeiculos()
+    for (let i = 0; i < listaVeiculos.length; i++) {
+      if (listaVeiculos[i].matricula === veiculoMatricula) {
+        idVeiculo = listaVeiculos[i].id_veiculo
+      }
+    }
+  } else {
+    let matriculaVeiculo = data.matricula
+    let corVeiculo = data.cor
+    let marcaVeiculo = data.marca
+    let modeloVeiculo = data.modelo
+    let newVeiculo = await adicionarVeiculo(matriculaVeiculo, corVeiculo, marcaVeiculo, modeloVeiculo, mecId)
+    idVeiculo = newVeiculo.id_veiculo
+  }
+  
+  //Insert Checklist/Tarefa and/or get checklistId
+  let idChecklist
+  if (data.escolhaTarefa != "") {
+    let tarefaDescricao = data.escolhaTarefa
+    let allChecklists = await getChecklists()
+    for (let i = 0; i < allChecklists.length; i++) {
+      if (allChecklists[i].descricao === tarefaDescricao) {
+        idChecklist = allChecklists[i].id_checklist
+      }
+    }
+  } else {
+    let descricaoChecklist = data.descricaoChecklist
+    let accaoTarefa = data.accao
+    let descricaoTarefa = data.descricao
+    let obrigatoriedadeTarefa
+    if (data.obrigatoriedade === 'on') {
+      obrigatoriedadeTarefa = 'sim'
+    } else {
+      obrigatoriedadeTarefa = 'nao'
+    }
+    let newChecklistId = await newChecklist(descricaoChecklist)
+    idChecklist = newChecklistId.id_checklist
+    let newTarefa = await adicionarTarefa(accaoTarefa, descricaoTarefa, obrigatoriedadeTarefa, idChecklist)
+    console.log("newTarefa", newTarefa)
+  }
+
+  //Insert entrada
+  //Function to randomly generate client code
+  let result = ''
+  let characters = process.env.CHAR_SECRET
+  let charactersLength = characters.length
+  let length = 24
+  for (let i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+
+  //Get time
+  var d = new Date()
+  var date = d.getDate()
+  var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+  var year = d.getFullYear()
+  let dataEntrada = year + "-" + month + "-" + date
+
+  let link = result
+  console.log("link", link)
+  let newEntrada = await addEntrada(dataEntrada, idVeiculo, idChecklist, idCliente, link)
+  console.log("newEntrada", newEntrada)
+  
   res.redirect('/rececionista/' + req.body.nomeRececionista)
 })
 
@@ -273,7 +403,7 @@ router.get('/getAllTarefas', async (req, res) => {
 })
 
 //Gets info about cars without a mecanic and sends it to responsavel.hbs
-router.post('/aprovarOrcamentos', async (req, res) => {
+router.post('/aproletOrcamentos', async (req, res) => {
 
   const clientEmail = req.body.email
   const matriculaCarro = req.body.matricula
@@ -311,7 +441,7 @@ router.post('/aprovarOrcamentos', async (req, res) => {
   let idVeiculo = await getVeiculoIdByPlate(matriculaCarro)
   idVeiculo = idVeiculo.id_veiculo
 
-  const submitDetails = await aprovarOrcamentoIdVeiculo(today, currentTime, idCliente, idVeiculo)
+  const submitDetails = await aproletOrcamentoIdVeiculo(today, currentTime, idCliente, idVeiculo)
 
   res.redirect('/responsavel/' + req.body.nomeAdmin)
 })
@@ -468,7 +598,7 @@ router.post('/orcamentoAprovado/:link', async (req, res) => {
   let idCliente = await getClientByLink(urlCode)
   idCliente = idCliente[0].cliente
 
-  const submitDetails = await aprovarOrcamento(today, currentTime, idCliente)
+  const submitDetails = await aproletOrcamento(today, currentTime, idCliente)
 
   res.render('aproveSuccess')
 })
@@ -483,7 +613,6 @@ router.get('/dashboard', async (req, res) => {
 
   for (i = 0; i < tarefas.length; i++) {
     numeroTarefasPorID.push(tarefas[i].id_veiculo)
-    //console.log(tarefas[i])
   }
 
   const idVeiculos = [...new Set(numeroTarefasPorID)]
