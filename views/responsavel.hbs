@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <!-- Modal Adicionar Funcionarios -->
+        <!-- Modal Aprovar orçamentos -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -117,13 +117,16 @@
                         <form id="form1" method="post" action="http://localhost:3000/aprovarOrcamentos">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email Cliente</label>
-                                <input type="text" id="email" name="email" class="form-control" id="acaoInput" aria-describedby="emailHelp" placeholder="Escreva aqui..." required>
+                                <select class="custom-select" id="email" name="email" required>
+                                    <option value="">Escolha...</option>
+                                </select>
                             </div>
                             
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Matrícula Veículo</label>
-                                <input type="text" class="form-control" name="matricula" id="matricula" aria-describedby="emailHelp"
-                                placeholder="Escreva aqui..." required>
+                                <select class="custom-select" id="matricula" name="matricula" required>
+                                    <option value="">Escolha...</option>
+                                </select>
                             </div>
                             <div class="form-group" hidden>
                                 <label for="exampleInputEmail1">nomeAdmin</label>
@@ -181,15 +184,10 @@
         let carrosTrabalho = document.getElementById("carrosReparacaoColuna")
         let carrosProntos = document.getElementById("carrosProntosColuna")
 
-        let jsonData;
-        let jsonData2;
-
         // Fetch das tarefas pertencentes aos veiculos em espera, funçoes para mostrar listas dos veículos
         fetch('http://localhost:3000/getAllTarefas').then(
             async (result) => {
                 jsonData = await result.json();
-                console.log("jsonData", jsonData)
-                console.log('this: ', jsonData.tarefasVeiculosEspera.length)
 
                 //Create Espera view
                 if (jsonData.tarefasVeiculosEspera.length > 0) {
@@ -386,6 +384,47 @@
         ).catch((e) => {
             console.log('Couldnt get data from server')
         })
+
+        //Get client emails
+        fetch('http://localhost:3000/getClientes').then(
+            async (result) => {
+
+                jsonData1 = await result.json();
+                //console.log(jsonData1)
+
+                let select = document.getElementById("email"), arr = jsonData1
+
+                for (let i = 0; i < arr.length; i++) {
+                let option = document.createElement("OPTION"),
+                txt = document.createTextNode(arr[i].email);
+                option.appendChild(txt);
+                option.setAttribute("id", "botaoAddClient" + [i + 1])
+                option.setAttribute("value", arr[i].email);
+                select.insertBefore(option, select.lastChild);
+                }
+            }
+        ).catch((e) => {
+            console.log('Couldnt get data from server')
+        })
+
+        //Fetch veiculos to show on the modal
+        fetch('http://localhost:3000/getVeiculos').then(
+            async (result) => {
+
+                jsonData2 = await result.json();
+                //console.log(jsonData2)
+
+                let select = document.getElementById("matricula"), arr = jsonData2
+
+                for (let i = 0; i < arr.length; i++) {
+                let option = document.createElement("OPTION"),
+                txt = document.createTextNode(arr[i].matricula);
+                option.appendChild(txt);
+                option.setAttribute("value", arr[i].matricula);
+                select.insertBefore(option, select.lastChild);
+                }
+            }
+        )
     </script>
 
 </html>
