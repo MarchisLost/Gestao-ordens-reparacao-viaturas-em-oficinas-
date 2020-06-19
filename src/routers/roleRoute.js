@@ -517,19 +517,18 @@ router.post('/editarFuncionario', async(req, res) => {
   
   const data = await getLogin(usernameFunc)
   const idFunc = data.id_funcionario
-  bcrypt.compare(rawPassword, data.password, async (err, res2) => {
-    //If true means that the passwoard wasnt changed
-    if (res2 === true) {
-      const editedFunc = await editFuncionario(nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, rawPassword, usernameFunc, idFunc)
-    } else {
-      //encrypt the new password
-      await bcrypt.genSalt(saltRounds, async function(err, salt) {
-        await bcrypt.hash(rawPassword, salt, async function(err, passwordFunc) {
-          const editedFunc = await editFuncionario(nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, passwordFunc, usernameFunc, idFunc)
-        })
+  //If true means that the passwoard wasnt changed
+  if (rawPassword === data.password) {
+    const editedFunc = await editFuncionario(nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, rawPassword, usernameFunc, idFunc)
+  } else {
+    //encrypt the new password
+    await bcrypt.genSalt(saltRounds, async function(err, salt) {
+      await bcrypt.hash(rawPassword, salt, async function(err, passwordFunc) {
+        const editedFunc2 = await editFuncionario(nomeFunc, cargoFunc, idadeFunc, telemovelFunc, moradaFunc, emailFunc, passwordFunc, usernameFunc, idFunc)
       })
-    }
-  })
+    })
+  }
+
   res.redirect('/admin/' + req.body.nomeAdmin)
 })
 
