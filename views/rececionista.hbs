@@ -265,7 +265,7 @@
 
         })
       }
-    );
+    )
 
     //Fetch mecanicos to show on the modal
     fetch('http://localhost:3000/getMecanicos/').then(
@@ -285,6 +285,11 @@
         }
       }
     )
+
+    //Reload the page
+    document.getElementById('atualizarBotao').addEventListener('click', (e) => {
+      window.location.reload(true);
+    })
   </script>
 
 </html>
