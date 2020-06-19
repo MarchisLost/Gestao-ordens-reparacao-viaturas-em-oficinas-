@@ -80,7 +80,7 @@ const getNomeCliente = async (id) => {
 
 const getdetalhesOrcamento = async(id) => {
   let data = await db.query(
-    "select orcamento.id_cliente, orcamento.id_veiculo, valor,  descricao from orcamento where orcamento.id_cliente = $1", [id]
+    "select * from orcamento where id_cliente = $1", [id]
   )
   .catch(e => console.error(e.stack))
 

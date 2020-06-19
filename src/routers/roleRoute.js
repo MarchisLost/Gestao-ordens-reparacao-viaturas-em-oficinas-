@@ -6,10 +6,10 @@ const saltRounds = 10
 
 const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, 
   getProblemas, getListaTarefas, getFuncionarioByUsername,
-  getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
+  getClientByLink, getVeiculoById, getNomeCliente, aproletOrcamento,
   getVeiculosByFuncionario, getTarefasVeiculo, maxIDVeiculo,
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa, getListaMecanicos,
-  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin, getClientIdByEmail, aprovarOrcamentoIdVeiculo, getVeiculoIdByPlate, newChecklist, getClientes, getChecklists, addEntrada, addCliente } = require('../db/templates')
+  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin, getClientIdByEmail, aproletOrcamentoIdVeiculo, getVeiculoIdByPlate, newChecklist, getClientes, getChecklists, addEntrada, addCliente } = require('../db/templates')
 
 //--------------------------------------------------------------------
 // Mecanico ----------------------------------------------------------
@@ -312,10 +312,10 @@ router.post('/addEntrada', async (req, res) => {
   }
 
   //Get time
-  var d = new Date()
-  var date = d.getDate()
-  var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
-  var year = d.getFullYear()
+  let d = new Date()
+  let date = d.getDate()
+  let month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+  let year = d.getFullYear()
   let dataEntrada = year + "-" + month + "-" + date
 
   let link = result
@@ -403,7 +403,7 @@ router.get('/getAllTarefas', async (req, res) => {
 })
 
 //Gets info about cars without a mecanic and sends it to responsavel.hbs
-router.post('/aprovarOrcamentos', async (req, res) => {
+router.post('/aproletOrcamentos', async (req, res) => {
 
   const clientEmail = req.body.email
   const matriculaCarro = req.body.matricula
@@ -432,7 +432,7 @@ router.post('/aprovarOrcamentos', async (req, res) => {
   let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
   let yyyy = today.getFullYear();
   
-  today = yyyy + '-' + mm + '-' + dd;
+  today = yyyy + '-' + mm + '-' + dd
   currentTime = getTime()
 
   let idCliente = await getClientIdByEmail(clientEmail)
@@ -441,9 +441,19 @@ router.post('/aprovarOrcamentos', async (req, res) => {
   let idVeiculo = await getVeiculoIdByPlate(matriculaCarro)
   idVeiculo = idVeiculo.id_veiculo
 
-  const submitDetails = await aprovarOrcamentoIdVeiculo(today, currentTime, idCliente, idVeiculo)
+  const submitDetails = await aproletOrcamentoIdVeiculo(today, currentTime, idCliente, idVeiculo)
 
   res.redirect('/responsavel/' + req.body.nomeAdmin)
+})
+
+
+//---------------------------------------------------------------------
+// Admin -------------------------------------------------------------
+//---------------------------------------------------------------------
+
+router.get('/admin/:username', (req, res) => {
+  const user = req.params.username
+  res.render('admin', {user})
 })
 
 //Gets info of new checklist
@@ -470,14 +480,6 @@ router.post('/addChecklist', async (req, res) => {
   res.redirect('/admin/' + req.body.nomeAdmin3)
 })
 
-//---------------------------------------------------------------------
-// Admin -------------------------------------------------------------
-//---------------------------------------------------------------------
-
-router.get('/admin/:username', (req, res) => {
-  const user = req.params.username
-  res.render('admin', {user})
-})
 
 //Add worker
 router.post('/adicionarFuncionario', async(req, res) => {
@@ -543,7 +545,10 @@ router.get('/getFuncionarios', async (req, res) => {
 //--------------------------------------------------------------------
 
 router.get('/cliente/:codigo', async (req, res) => {
-  const clienteEspecifico = await getClientByLink(req.params.codigo)  // ID e Link do cliente
+  //Check id link is still good
+  let link = req.params.codigo
+  
+  const clienteEspecifico = await getClientByLink(link)  // ID e Link do cliente
   const orcamentos = await getdetalhesOrcamento(clienteEspecifico[0].cliente)   //   Informacao do orcamento do cliente
   const problemasRelatados = await getProblemas(clienteEspecifico[0].cliente) // problemas do cliente
   const tarefasDescricao = await getListaTarefas(clienteEspecifico[0].cliente)  // tarefas do cliente
@@ -561,7 +566,38 @@ router.get('/cliente/:codigo', async (req, res) => {
   const problemaOrcamento = problemasRelatados[0].descricao
   const estado = estadoVeiculo[0].estado
 
-  res.render('cliente', { nomeCliente, estado, descricaoOrcamento, valorOrcamento, problemaOrcamento, arrayTarefa })
+  //Logic to determine if link is approved and for how long
+  if (orcamentos[0].aprovacao === 0) {
+    res.render('cliente', { nomeCliente, estado, descricaoOrcamento, valorOrcamento, problemaOrcamento, arrayTarefa })
+  } else {
+    //Get nows date
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear()
+    today = yyyy + '-' + mm + '-' + dd
+    
+    //Get approved date
+    let theOtherDay = new Date(orcamentos[0].dataaprovacao)
+    let dd1 = String(theOtherDay.getDate()).padStart(2, '0');
+    let mm1 = String(theOtherDay.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy1 = theOtherDay.getFullYear()
+    theOtherDay = yyyy1 + '-' + mm1 + '-' + dd1
+
+    //Check number of days passed
+    let date1 = new Date(today)
+    let date2 = new Date(theOtherDay)
+    let timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
+    console.log("diffDays", diffDays)
+
+    if (diffDays > 1) {
+      res.send('<h1> Este link já não se encontra ativo</h1>')
+    } else {
+      res.render('cliente', { nomeCliente, estado, descricaoOrcamento, valorOrcamento, problemaOrcamento, arrayTarefa })
+    }
+  }
+  
 })
 
 router.post('/orcamentoAprovado/:link', async (req, res) => {
@@ -598,7 +634,7 @@ router.post('/orcamentoAprovado/:link', async (req, res) => {
   let idCliente = await getClientByLink(urlCode)
   idCliente = idCliente[0].cliente
 
-  const submitDetails = await aprovarOrcamento(today, currentTime, idCliente)
+  const submitDetails = await aproletOrcamento(today, currentTime, idCliente)
 
   res.render('aproveSuccess')
 })
