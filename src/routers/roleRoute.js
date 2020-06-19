@@ -589,7 +589,6 @@ router.get('/cliente/:codigo', async (req, res) => {
     let date2 = new Date(theOtherDay)
     let timeDiff = Math.abs(date2.getTime() - date1.getTime());
     let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
-    console.log("diffDays", diffDays)
 
     if (diffDays > 1) {
       res.send('<h1> Este link já não se encontra ativo</h1>')
