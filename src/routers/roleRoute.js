@@ -209,15 +209,6 @@ router.post('/adicionarVeiculo', async (req, res) => {
   res.redirect('/rececionista/' + req.body.nomeRececionista)
 })
 
-/* router.get('/getVeiculosCliente/:id', async (req, res) => {
-  const idCliente = req.params.id
-  console.log("idCliente", idCliente)
-  const veiculos = await getListaVeiculos()
-  console.log("veiculos", veiculos)
-
-  res.json(veiculos)
-}) */
-
 //Add new entrada view page
 router.get('/adicionarEntrada/:username', async (req, res) => {
   const user = req.params.username
