@@ -32,6 +32,7 @@
                     <p>{{user}}</p>
                     <li>
                         <a class="dropdown-toggle" data-toggle="modal" href="#exampleModal">Aceitar Orçamentos</a>
+                        <a class="dropdown-toggle" data-toggle="modal" href="#exampleModal2">Adicionar Orçamentos</a>
                         <a href="/dashboard">Dashboard</a>
                         <a href="/rececionista/{{user}}">Rececionista</a>
                         <a href="/workview/{{user}}">Mecanico</a>
@@ -137,6 +138,50 @@
                     <div class="modal-footer">
                         <button type="button" id="dismissalButton" class="btn btn-warning" data-dismiss="modal">Close</button>
                         <button id="botaoAprovarOrcamento" type="submit" form="form1" class="btn btn-primary">Aprovar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- Modal Adicionar orçamentos -->
+        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+        aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">Adicionar Orçamento</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form2" method="post" action="http://localhost:3000/adicionarOrcamentos">
+                            <div class="form-group">
+                                <label for="exampleInputEmail2">Email Cliente</label>
+                                <select class="custom-select" id="email2" name="email2" required>
+                                    <option value="">Escolha...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="exampleInputEmail2">Matrícula Veículo</label>
+                                <select class="custom-select" id="matricula2" name="matricula2" required>
+                                    <option value="">Escolha...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail2">Valor orçamento</label>
+                                <input type="text" class="form-control" name="preco" id="preco" aria-describedby="emailHelp" value="">
+                            </div>
+                            <div class="form-group" hidden>
+                                <label for="exampleInputEmail1">nomeAdmin</label>
+                                <input type="text" class="form-control" name="nomeAdmin" id="nomeAdmin" aria-describedby="emailHelp" value="{{user}}" hidden>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="dismissalButton" class="btn btn-warning" data-dismiss="modal">Close</button>
+                        <button id="botaoAdicionarOrcamento" type="submit" form="form2" class="btn btn-primary">Adicionar</button>
                     </div>
                 </div>
             </div>
@@ -394,6 +439,7 @@
 
                 let select = document.getElementById("email"), arr = jsonData1
 
+                //Add to aceitar
                 for (let i = 0; i < arr.length; i++) {
                 let option = document.createElement("OPTION"),
                 txt = document.createTextNode(arr[i].email);
@@ -402,9 +448,21 @@
                 option.setAttribute("value", arr[i].email);
                 select.insertBefore(option, select.lastChild);
                 }
+
+                //Add to adicionar
+                let select2 = document.getElementById("email2"), arr2 = jsonData1
+
+                for (let i = 0; i < arr2.length; i++) {
+                let option2 = document.createElement("OPTION"),
+                txt2 = document.createTextNode(arr2[i].email);
+                option2.appendChild(txt2);
+                option2.setAttribute("id", "botaoAddClient2" + [i + 1])
+                option2.setAttribute("value", arr2[i].email);
+                select2.insertBefore(option2, select2.lastChild);
+                }
             }
         ).catch((e) => {
-            console.log('Couldnt get data from server')
+            console.log('Couldnt get data from server - cliente')
         })
 
         //Fetch veiculos to show on the modal
@@ -414,17 +472,33 @@
                 jsonData2 = await result.json();
                 //console.log(jsonData2)
 
+                //Add to aceitar
                 let select = document.getElementById("matricula"), arr = jsonData2
 
                 for (let i = 0; i < arr.length; i++) {
                 let option = document.createElement("OPTION"),
                 txt = document.createTextNode(arr[i].matricula);
                 option.appendChild(txt);
+                option.setAttribute("id", "botaoAddVeiculo" + [i + 1])
                 option.setAttribute("value", arr[i].matricula);
                 select.insertBefore(option, select.lastChild);
                 }
+
+                //Add to adicionar
+                let select2 = document.getElementById("matricula2"), arr2 = jsonData2
+
+                for (let i = 0; i < arr2.length; i++) {
+                let option2 = document.createElement("OPTION"),
+                txt2 = document.createTextNode(arr2[i].matricula);
+                option2.appendChild(txt2);
+                option2.setAttribute("id", "botaoAddVeiculo2" + [i + 1])
+                option2.setAttribute("value", arr2[i].matricula);
+                select2.insertBefore(option2, select2.lastChild);
+                }
             }
-        )
+        ).catch((e) => {
+            console.log('Couldnt get data from server - veiculo')
+        })
     </script>
 
 </html>

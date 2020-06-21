@@ -98,7 +98,7 @@ const getProblemas = async (id) => {
 
 const getListaTarefas = async (id) => {
   let data = await db.query(
-    "select tarefa.descricao from tarefa,entrada,checklist where  entrada.id_checklist = checklist.id_checklist  and tarefa.id_checklist = checklist.id_checklist and entrada.cliente = $1", [id]
+    "select tarefa.descricao from tarefa,entrada,checklist where  entrada.id_checklist = checklist.id_checklist and tarefa.id_checklist = checklist.id_checklist and entrada.cliente = $1", [id]
   )
   .catch(e => console.error(e.stack))
 
@@ -306,6 +306,15 @@ const aprovarOrcamentoIdVeiculo = async (date, time, idCliente, idVeiculo) => {
   return data.rows ? data.rows : null
 }
 
+//Adicioanr orcamento
+const adicionarOrcamento = async (valor, idCliente, idVeiculo) => {
+  let data = await db.query(
+    "INSERT INTO orcamento (id_orcamento, valor, descricao, id_cliente, id_veiculo, aprovacao) VALUES (default, $1, 'Os problemas que nos comunicou à chegada estão a ser resolvidos neste momento', $2, $3, '0')", [valor, idCliente, idVeiculo]
+  )
+  .catch(e => console.error(e.stack))
+
+  return data.rows ? data.rows : null
+}
 // ---------------------------------------------------------------------------------------------
 // Admin
 // ---------------------------------------------------------------------------------------------
@@ -383,5 +392,6 @@ module.exports = {
   getClientes,
   getChecklists,
   addEntrada,
-  addCliente
+  addCliente,
+  adicionarOrcamento
 }

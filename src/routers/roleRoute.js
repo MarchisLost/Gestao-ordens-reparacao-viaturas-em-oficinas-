@@ -6,10 +6,10 @@ const saltRounds = 10
 
 const { getWorkviewInfo, getTarefasCompletas, getdetalhesOrcamento, 
   getProblemas, getListaTarefas, getFuncionarioByUsername,
-  getClientByLink, getVeiculoById, getNomeCliente, aproletOrcamento,
+  getClientByLink, getVeiculoById, getNomeCliente, aprovarOrcamento,
   getVeiculosByFuncionario, getTarefasVeiculo, maxIDVeiculo,
   getVeiculo, getIdChecklistByEntrada, adicionarTarefa, maxIDTarefa, getListaMecanicos,
-  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin, getClientIdByEmail, aproletOrcamentoIdVeiculo, getVeiculoIdByPlate, newChecklist, getClientes, getChecklists, addEntrada, addCliente } = require('../db/templates')
+  getTarefasIncompletas, markTaskAsCompleted, getListaVeiculos, adicionarVeiculo, adicionarFuncionario, getFuncionario, editFuncionario, getLogin, getClientIdByEmail, aprovarOrcamentoIdVeiculo, getVeiculoIdByPlate, newChecklist, getClientes, getChecklists, addEntrada, addCliente, adicionarOrcamento} = require('../db/templates')
 
 //--------------------------------------------------------------------
 // Mecanico ----------------------------------------------------------
@@ -403,7 +403,7 @@ router.get('/getAllTarefas', async (req, res) => {
 })
 
 //Gets info about cars without a mecanic and sends it to responsavel.hbs
-router.post('/aproletOrcamentos', async (req, res) => {
+router.post('/aprovarOrcamentos', async (req, res) => {
 
   const clientEmail = req.body.email
   const matriculaCarro = req.body.matricula
@@ -441,7 +441,25 @@ router.post('/aproletOrcamentos', async (req, res) => {
   let idVeiculo = await getVeiculoIdByPlate(matriculaCarro)
   idVeiculo = idVeiculo.id_veiculo
 
-  const submitDetails = await aproletOrcamentoIdVeiculo(today, currentTime, idCliente, idVeiculo)
+  const submitDetails = await aprovarOrcamentoIdVeiculo(today, currentTime, idCliente, idVeiculo)
+
+  res.redirect('/responsavel/' + req.body.nomeAdmin)
+})
+
+//adds new value to orcamento
+router.post('/adicionarOrcamentos', async (req, res) => {
+
+  const clientEmail = req.body.email2
+  const matriculaCarro = req.body.matricula2
+  const valor = req.body.preco
+
+  //Get client and veiculo id
+  let idCliente = await getClientIdByEmail(clientEmail)
+  idCliente = idCliente.id_cliente
+  let idVeiculo = await getVeiculoIdByPlate(matriculaCarro)
+  idVeiculo = idVeiculo.id_veiculo
+
+  const submitDetails = await adicionarOrcamento(valor, idCliente, idVeiculo)
 
   res.redirect('/responsavel/' + req.body.nomeAdmin)
 })
@@ -632,7 +650,7 @@ router.post('/orcamentoAprovado/:link', async (req, res) => {
   let idCliente = await getClientByLink(urlCode)
   idCliente = idCliente[0].cliente
 
-  const submitDetails = await aproletOrcamento(today, currentTime, idCliente)
+  const submitDetails = await aprovarOrcamento(today, currentTime, idCliente)
 
   res.render('aproveSuccess')
 })
