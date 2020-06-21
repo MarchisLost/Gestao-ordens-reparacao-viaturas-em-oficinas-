@@ -57,14 +57,11 @@
                             <span></span>
                             <span></span>
                         </button>
-                        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <i class="fas fa-align-justify"></i>
-                        </button>
                     </div>
                 </nav>
                 
                 <h2>Lista Veículos à Espera</h2>
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
 
                         <div class="col">
@@ -78,7 +75,7 @@
                 <div class="line"></div>
 
                 <h2>Lista Veículos em Reparação</h2>
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
 
                         <div class="col">
@@ -92,7 +89,7 @@
                 <div class="line"></div>
 
                 <h2>Lista Veículos Prontos</h2>
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col">
                             <div id="carrosProntosColuna" class="card card-body">
@@ -272,6 +269,10 @@
                         //Appends
                         firstDiv.appendChild(secondDiv)
                         carrosEspera.appendChild(firstDiv)
+
+                        //BR
+                        linebreak = document.createElement("br");
+                        firstDiv.appendChild(linebreak);
                     }
 
                     //Inserts the descriçoes after view button is pressed
@@ -336,6 +337,10 @@
                         //Appends
                         firstDiv.appendChild(secondDiv)
                         carrosTrabalho.appendChild(firstDiv)
+
+                        //BR
+                        linebreak = document.createElement("br");
+                        firstDiv.appendChild(linebreak);
                     }
 
                     //Inserts the descriçoes after view button is pressed
@@ -400,6 +405,10 @@
                         //Appends
                         firstDiv.appendChild(secondDiv)
                         carrosProntos.appendChild(firstDiv)
+
+                        //BR
+                        linebreak = document.createElement("br");
+                        firstDiv.appendChild(linebreak);
                     }
 
                     //Inserts the descriçoes after view button is pressed
