@@ -102,13 +102,13 @@
   }
 
   const currentLink = window.location.href
-  var linkCliente = currentLink.replace('http://localhost:3000/cliente/','');
+  var linkCliente = currentLink.replace('/cliente/','');
 
   document.getElementById('botaoAprovar').addEventListener('click', (e) => {
     var formAprovar = document.querySelector('#formAprovar')
-    formAprovar.setAttribute('action', 'http://localhost:3000/')
+    formAprovar.setAttribute('action', '/')
 
-    formAprovar.action = 'http://localhost:3000/orcamentoAprovado/' + linkCliente
+    formAprovar.action = '/orcamentoAprovado/' + linkCliente
   })
 
 </script>

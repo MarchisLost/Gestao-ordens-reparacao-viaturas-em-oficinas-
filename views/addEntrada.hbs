@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <form id="formGlobal" method="post" action="http://localhost:3000/addEntrada">
+    <form id="formGlobal" method="post" action="/addEntrada">
       <div class="card text-center">
         <div class="card-header">
           <h4>Adicionar Cliente</h4> 
@@ -191,7 +191,7 @@
       <div class="card-body">
         <button type="submit" class="btn btn-success" id="inserirEntrada" form="formGlobal">Inserir Entrada
         </button>
-        <button type="button" class="btn btn-warning" onclick="location.href='http://localhost:3000/rececionista/{{user}}'">Cancelar Entrada
+        <button type="button" class="btn btn-warning" onclick="location.href='/rececionista/{{user}}'">Cancelar Entrada
         </button>
       </div>
     </div>
@@ -203,7 +203,7 @@
     let tarefaSelecionado
     let mecanicoSelecionado
     //Fetch mecanicos to show on the modal
-    fetch('http://localhost:3000/getClientes').then(
+    fetch('/getClientes').then(
       async (result) => {
 
         jsonData = await result.json();
@@ -223,7 +223,7 @@
     )
 
     //Fetch mecanicos to show on the modal
-    fetch('http://localhost:3000/getMecanicos/').then(
+    fetch('/getMecanicos/').then(
       async (result) => {
         jsonData2 = await result.json();
         //console.log('mec:', jsonData2)
@@ -241,7 +241,7 @@
     )
 
     //Fetch veiculos to show on the modal
-    fetch('http://localhost:3000/getVeiculos').then(
+    fetch('/getVeiculos').then(
       async (result) => {
 
         jsonData1 = await result.json();
@@ -260,7 +260,7 @@
     )
 
     //Fetch tarefas to show on the modal
-    fetch('http://localhost:3000/getChecklists').then(
+    fetch('/getChecklists').then(
       async (result) => {
 
         jsonData3 = await result.json();

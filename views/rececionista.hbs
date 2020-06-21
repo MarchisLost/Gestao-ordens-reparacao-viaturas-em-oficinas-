@@ -57,7 +57,7 @@
 
           <br>
 
-          <button class="btn btn-dark" type="button" onclick="location.href='http://localhost:3000/adicionarEntrada/{{user}}'"><i class="fa fa-plus"> Nova Entrada</i>
+          <button class="btn btn-dark" type="button" onclick="location.href='/adicionarEntrada/{{user}}'"><i class="fa fa-plus"> Nova Entrada</i>
           </button>
           <button class="btn btn-primary" id="atualizarBotao">Atualizar Pagina</button>
 
@@ -121,7 +121,7 @@
   
   <script>
     //Fetch veiculos to show on the main screen
-    fetch('http://localhost:3000/getVeiculos/').then(
+    fetch('/getVeiculos/').then(
       async (result) => {
         jsonData = await result.json();
 
@@ -268,7 +268,7 @@
     )
 
     //Fetch mecanicos to show on the modal
-    fetch('http://localhost:3000/getMecanicos/').then(
+    fetch('/getMecanicos/').then(
       async (result) => {
 
         jsonData2 = await result.json();

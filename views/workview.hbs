@@ -121,7 +121,7 @@
     let jsonData2;
 
     //Fetch matriculas dos veiculos pertencentes ao mecanico x
-     fetch('http://localhost:3000/getMatriculas/' + nomeUser + '.json').then(
+     fetch('/getMatriculas/' + nomeUser + '.json').then(
       async (result) => {
         // console.log(result);
         jsonData1 = await result.json();
@@ -134,7 +134,7 @@
     )
 
     // Fetch das tarefas pertencentes aos veiculos em espera
-    fetch('http://localhost:3000/getTarefas/' + nomeUser + '.json').then(
+    fetch('/getTarefas/' + nomeUser + '.json').then(
       async (result) => {
         // console.log(result);
         jsonData = await result.json();
@@ -170,7 +170,7 @@
             formComeca = document.createElement('form')
             formComeca.setAttribute('id', 'formComeca' + jsonData[i][0].id_veiculo)
             formComeca.setAttribute('method', 'post')
-            formComeca.setAttribute('action', 'http://localhost:3000/comecarCarro/' + nomeUser + '/' + jsonData[i][0].id_veiculo)
+            formComeca.setAttribute('action', '/comecarCarro/' + nomeUser + '/' + jsonData[i][0].id_veiculo)
 
             // Criar div com form group
             divForm = document.createElement('div')
@@ -224,7 +224,7 @@
     );
 
     // Fetch das tarefas pertencentes aos veiculos em reparacao
-    fetch('http://localhost:3000/emReparacao/' + nomeUser + '.json').then(
+    fetch('/emReparacao/' + nomeUser + '.json').then(
       async (result) => {
         jsonData2 = await result.json();
         //console.log("jsonData2", jsonData2)
@@ -261,7 +261,7 @@
             formSair = document.createElement('form')
             formSair.setAttribute('id', 'formSair' + jsonData2[i][0].id_veiculo)
             formSair.setAttribute('method', 'post')
-            formSair.setAttribute('action', 'http://localhost:3000/sairCarro/' + nomeUser + '/' + jsonData2[i][0].id_veiculo)
+            formSair.setAttribute('action', '/sairCarro/' + nomeUser + '/' + jsonData2[i][0].id_veiculo)
 
             // Criar div com form group para botao Sair
             divFormSair = document.createElement('div')
@@ -281,7 +281,7 @@
             formTerminar = document.createElement('form')
             formTerminar.setAttribute('id', 'formSair' + jsonData2[i][0].id_veiculo)
             formTerminar.setAttribute('method', 'post')
-            formTerminar.setAttribute('action', 'http://localhost:3000/terminarCarro/' + nomeUser + '/' + jsonData2[i][0].id_veiculo)
+            formTerminar.setAttribute('action', '/terminarCarro/' + nomeUser + '/' + jsonData2[i][0].id_veiculo)
 
             // Criar div com form group para botao Terminar
             divFormTerminar = document.createElement('div')
@@ -337,7 +337,7 @@
               completeTarefaForm = document.createElement('form')
               completeTarefaForm.setAttribute('id', 'completeTarefaForm' + [j + 1])
               completeTarefaForm.setAttribute('method', 'post')
-              completeTarefaForm.setAttribute('action', 'http://localhost:3000/updateTarefa/' + nomeUser + "/" + jsonData2[i][j].id_tarefa + "/" + jsonData2[i][j].id_veiculo)
+              completeTarefaForm.setAttribute('action', '/updateTarefa/' + nomeUser + "/" + jsonData2[i][j].id_tarefa + "/" + jsonData2[i][j].id_veiculo)
 
               // Criar checkmark
               done = document.createElement('button')
@@ -395,9 +395,9 @@
                 valorDescricao = "vazio"
               }
               
-              formAddTarefa.setAttribute('action', 'http://localhost:3000/')
+              formAddTarefa.setAttribute('action', '/')
 
-              formAddTarefa.action = 'http://localhost:3000/addTarefa/' + nomeUser + '/' + entradaID + '/' + valorAcao + '/' + valorDescricao + '/' + valorCheckBock
+              formAddTarefa.action = '/addTarefa/' + nomeUser + '/' + entradaID + '/' + valorAcao + '/' + valorDescricao + '/' + valorCheckBock
             })
           });
         });

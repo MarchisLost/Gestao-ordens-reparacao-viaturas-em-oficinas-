@@ -282,17 +282,17 @@
             let formAddFuncinario = document.querySelector('#form1')
             //Get the worker name
             var url = window.location.href
-            var nomeAdmin = url.replace('http://localhost:3000/admin/','');
+            var nomeAdmin = url.replace('/admin/','');
 
             document.getElementById('nomeAdmin').value = nomeAdmin
 
-            formAddFuncinario.setAttribute('action', 'http://localhost:3000/adicionarFuncionario')
+            formAddFuncinario.setAttribute('action', '/adicionarFuncionario')
         })
 
         let funcData
         let funcID = document.getElementById("listaFuncColuna")
         //Fetch data about all workers
-        fetch('http://localhost:3000/getFuncionarios').then(
+        fetch('/getFuncionarios').then(
             async (result) => {
                 funcData = await result.json()
                 //console.log("funcData", funcData)
@@ -349,20 +349,20 @@
             let formEditFuncinario = document.querySelector('#form2')
             //Get the worker name to send it
             let url = window.location.href
-            let nomeAdmin = url.replace('http://localhost:3000/admin/','')
+            let nomeAdmin = url.replace('/admin/','')
             document.getElementById('nomeAdmin2').value = nomeAdmin
             
-            formEditFuncinario.setAttribute('action', 'http://localhost:3000/editarFuncionario')
+            formEditFuncinario.setAttribute('action', '/editarFuncionario')
         })
 
         document.getElementById('botaoAdicionarTarefa').addEventListener('click', async (e) => {
               let formAddTarefa = document.querySelector('#form3')
               //Get the worker name to send it
               let url = window.location.href
-              let nomeAdmin = url.replace('http://localhost:3000/admin/','');
+              let nomeAdmin = url.replace('/admin/','');
               document.getElementById('nomeAdmin3').value = nomeAdmin
               
-              formAddTarefa.setAttribute('action', 'http://localhost:3000/addChecklist')
+              formAddTarefa.setAttribute('action', '/addChecklist')
             })
     </script>
 
